@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { meetings } from '../../data/meetings';
 import { emails } from '../../data/emails';
 import { outreachSuggestions } from '../../data/outreach';
 
@@ -9,26 +8,14 @@ type ScheduleRow = {
   id: string;
   time: string;
   sortMinutes: number;
-  type: 'Meeting' | 'Email' | 'Outreach';
+  type: 'Email' | 'Outreach';
   title: string;
   client: string;
   status: string;
-  live: boolean;
   href: string;
   action: string;
   priority?: string;
 };
-
-function parseTimeToMinutes(timeStr: string): number {
-  const match = timeStr.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
-  if (!match) return 0;
-  let hours = parseInt(match[1], 10);
-  const minutes = parseInt(match[2], 10);
-  const period = match[3].toUpperCase();
-  if (period === 'PM' && hours !== 12) hours += 12;
-  if (period === 'AM' && hours === 12) hours = 0;
-  return hours * 60 + minutes;
-}
 
 function formatIsoTime(iso: string): string {
   const d = new Date(iso);
@@ -39,18 +26,8 @@ function formatIsoTime(iso: string): string {
   return `${hour12}:${m.toString().padStart(2, '0')} ${period}`;
 }
 
-function statusText(status: string): string {
-  switch (status) {
-    case 'completed': return 'Completed';
-    case 'upcoming': return 'Upcoming';
-    case 'in-progress': return 'Live';
-    default: return status;
-  }
-}
-
 export default function ScheduleTable() {
   const router = useRouter();
-  const todayMeetings = meetings.filter((m) => m.date === '2026-03-02');
   const recentEmails = emails.filter((e) => {
     const received = new Date(e.receivedAt);
     const cutoff = new Date('2026-03-01T00:00:00Z');
@@ -61,32 +38,17 @@ export default function ScheduleTable() {
     (o) => o.status === 'pending' && (o.priority === 'urgent' || o.priority === 'high')
   );
 
-  const rows: ScheduleRow[] = [
-    ...todayMeetings.map((m) => ({
-      id: `meeting-${m.id}`,
-      time: m.time,
-      sortMinutes: parseTimeToMinutes(m.time),
-      type: 'Meeting' as const,
-      title: m.title,
-      client: m.clientName,
-      status: statusText(m.status),
-      live: m.status === 'in-progress',
-      href: m.status === 'completed' ? `/meetings/${m.id}` : `/prep/${m.id}`,
-      action: m.status === 'completed' ? 'Review notes' : m.status === 'in-progress' ? 'View live' : 'Prep now',
-    })),
-    ...recentEmails.map((e) => ({
-      id: `email-${e.id}`,
-      time: formatIsoTime(e.receivedAt),
-      sortMinutes: new Date(e.receivedAt).getUTCHours() * 60 + new Date(e.receivedAt).getUTCMinutes(),
-      type: 'Email' as const,
-      title: e.subject,
-      client: e.clientName,
-      status: e.isRead ? 'Read' : 'Unread',
-      live: false,
-      href: '/follow-up',
-      action: e.draftReply ? 'Review draft' : 'Open',
-    })),
-  ].sort((a, b) => a.sortMinutes - b.sortMinutes);
+  const emailRows: ScheduleRow[] = recentEmails.map((e) => ({
+    id: `email-${e.id}`,
+    time: formatIsoTime(e.receivedAt),
+    sortMinutes: new Date(e.receivedAt).getUTCHours() * 60 + new Date(e.receivedAt).getUTCMinutes(),
+    type: 'Email' as const,
+    title: e.subject,
+    client: e.clientName,
+    status: e.isRead ? 'Read' : 'Unread',
+    href: '/follow-up',
+    action: e.draftReply ? 'Review draft' : 'Open',
+  })).sort((a, b) => a.sortMinutes - b.sortMinutes);
 
   const outreachRows: ScheduleRow[] = urgentHighOutreach.map((o) => ({
     id: `outreach-${o.id}`,
@@ -96,21 +58,12 @@ export default function ScheduleTable() {
     title: o.trigger.length > 80 ? o.trigger.slice(0, 80) + '…' : o.trigger,
     client: o.clientName,
     status: o.priority.charAt(0).toUpperCase() + o.priority.slice(1),
-    live: false,
     href: `/outreach#outreach-${o.id}`,
     action: 'View',
     priority: o.priority,
   }));
 
-  function statusBadge(status: string, live: boolean, priority?: string) {
-    if (live) {
-      return (
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-green-light px-2.5 py-0.5 text-[11px] font-medium text-accent-green">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent-green animate-pulse-dot" />
-          Live
-        </span>
-      );
-    }
+  function statusBadge(status: string, priority?: string) {
     if (priority === 'urgent') {
       return <span className="rounded-full bg-red-100 px-2.5 py-0.5 text-[11px] font-semibold text-red-700">Urgent</span>;
     }
@@ -120,10 +73,6 @@ export default function ScheduleTable() {
     switch (status) {
       case 'Unread':
         return <span className="rounded-full bg-accent-blue-light px-2.5 py-0.5 text-[11px] font-medium text-accent-blue">Unread</span>;
-      case 'Upcoming':
-        return <span className="rounded-full bg-accent-amber-light px-2.5 py-0.5 text-[11px] font-medium text-accent-amber">Upcoming</span>;
-      case 'Completed':
-        return <span className="rounded-full bg-surface-inset px-2.5 py-0.5 text-[11px] font-medium text-ink-faint">Completed</span>;
       default:
         return <span className="text-[11px] text-ink-faint">{status}</span>;
     }
@@ -131,8 +80,6 @@ export default function ScheduleTable() {
 
   function typePill(type: string) {
     switch (type) {
-      case 'Meeting':
-        return <span className="inline-block rounded-full bg-accent-blue-light px-2.5 py-0.5 text-[11px] font-medium text-accent-blue">Meeting</span>;
       case 'Email':
         return <span className="inline-block rounded-full bg-accent-purple-light px-2.5 py-0.5 text-[11px] font-medium text-accent-purple">Email</span>;
       case 'Outreach':
@@ -178,14 +125,10 @@ export default function ScheduleTable() {
                   }`}
                 >
                   <td className="whitespace-nowrap py-3 pl-4 pr-6 text-ink-faint">{row.time}</td>
-                  <td className="py-3 pr-6">
-                    {typePill(row.type)}
-                  </td>
+                  <td className="py-3 pr-6">{typePill(row.type)}</td>
                   <td className="max-w-xs truncate py-3 pr-6 font-medium text-ink">{row.title}</td>
                   <td className="py-3 pr-6 text-ink-muted">{row.client}</td>
-                  <td className="py-3 pr-6">
-                    {statusBadge(row.status, row.live, row.priority)}
-                  </td>
+                  <td className="py-3 pr-6">{statusBadge(row.status, row.priority)}</td>
                   <td className="py-3 pr-4 text-right">
                     <span className="text-xs font-medium text-accent-blue opacity-0 group-hover:opacity-100 transition-opacity">
                       {row.action} &rarr;
@@ -193,15 +136,17 @@ export default function ScheduleTable() {
                   </td>
                 </tr>
               ))}
-              {/* Divider between outreach and timed items */}
-              <tr>
-                <td colSpan={6} className="bg-surface-inset/50 px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-ink-faint border-b border-border">
-                  Today&apos;s Schedule
-                </td>
-              </tr>
             </>
           )}
-          {rows.map((row, i) => (
+          {/* Email section header */}
+          {outreachRows.length > 0 && emailRows.length > 0 && (
+            <tr>
+              <td colSpan={6} className="bg-surface-inset/50 px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-ink-faint border-b border-border">
+                Emails &amp; Follow-ups
+              </td>
+            </tr>
+          )}
+          {emailRows.map((row, i) => (
             <tr
               key={row.id}
               onClick={() => router.push(row.href)}
@@ -210,14 +155,10 @@ export default function ScheduleTable() {
               }`}
             >
               <td className="whitespace-nowrap py-3 pl-4 pr-6 font-semibold text-ink">{row.time}</td>
-              <td className="py-3 pr-6">
-                {typePill(row.type)}
-              </td>
+              <td className="py-3 pr-6">{typePill(row.type)}</td>
               <td className="max-w-xs truncate py-3 pr-6 font-medium text-ink">{row.title}</td>
               <td className="py-3 pr-6 text-ink-muted">{row.client}</td>
-              <td className="py-3 pr-6">
-                {statusBadge(row.status, row.live)}
-              </td>
+              <td className="py-3 pr-6">{statusBadge(row.status)}</td>
               <td className="py-3 pr-4 text-right">
                 <span className="text-xs font-medium text-accent-blue opacity-0 group-hover:opacity-100 transition-opacity">
                   {row.action} &rarr;

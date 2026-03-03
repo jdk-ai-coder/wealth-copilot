@@ -241,3 +241,46 @@ export interface ClientFlag {
   severity: 'critical' | 'warning' | 'info';
   detail?: string;
 }
+
+// ── Feature 7: Inbound Leads (401k → Wealth Management) ─────────
+export type LeadStatus = 'new' | 'contacted' | 'meeting-scheduled' | 'converted' | 'not-interested';
+
+export type LeadTriggerType =
+  | 'aum-threshold'
+  | 'life-event'
+  | 'retirement-approaching'
+  | 'job-change'
+  | 'rollover-eligible'
+  | 'vesting-milestone'
+  | 'referral';
+
+export interface LeadTrigger {
+  id: string;
+  type: LeadTriggerType;
+  description: string;
+  detectedAt: string;
+}
+
+export interface LeadAiOutreach {
+  subject: string;
+  body: string;
+  tone: 'professional' | 'warm' | 'urgent';
+}
+
+export interface Lead {
+  id: string;
+  name: string;
+  age: number;
+  employer: string;
+  jobTitle: string;
+  balance401k: number;
+  vestingPct: number;
+  yearsInPlan: number;
+  estimatedTotalWealth: number;
+  conversionScore: number;
+  triggers: LeadTrigger[];
+  status: LeadStatus;
+  lastContactedAt?: string;
+  aiOutreach: LeadAiOutreach;
+  notes?: string;
+}

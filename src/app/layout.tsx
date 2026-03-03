@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: 'Wealth Management Demo',
-  description: 'AI-powered copilot for financial advisors',
+  description: 'AI-powered wealth copilot for financial advisors',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

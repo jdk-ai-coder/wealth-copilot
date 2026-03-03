@@ -104,14 +104,10 @@ function ClientsContent() {
               <th className="py-3 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('totalAssets')}>
                 Assets{sortIndicator('totalAssets')}
               </th>
-              <th className="py-3 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('ytdReturn')}>
-                YTD{sortIndicator('ytdReturn')}
-              </th>
               <th className="py-3 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('nextReview')}>
                 Next Review{sortIndicator('nextReview')}
               </th>
-              <th className="py-3 pr-4">Flags</th>
-              <th className="py-3">Tags</th>
+              <th className="py-3">Flags</th>
             </tr>
           </thead>
           <tbody>
@@ -125,13 +121,10 @@ function ClientsContent() {
                 <td className="py-3 pr-4 text-ink-muted max-w-[200px] truncate">{client.occupation}</td>
                 <td className="py-3 pr-4 text-ink-muted whitespace-nowrap">{client.riskProfile}</td>
                 <td className="py-3 pr-4 text-ink whitespace-nowrap">{formatCurrency(client.totalAssets)}</td>
-                <td className={`py-3 pr-4 whitespace-nowrap ${client.ytdReturn >= 0 ? 'text-ink' : 'text-ink-muted'}`}>
-                  {client.ytdReturn >= 0 ? '+' : ''}{client.ytdReturn.toFixed(1)}%
-                </td>
                 <td className="py-3 pr-4 text-ink-muted whitespace-nowrap">
                   {new Date(client.nextReview + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                 </td>
-                <td className="py-3 pr-4">
+                <td className="py-3">
                   <div className="flex gap-1 overflow-hidden">
                     {client.flags?.map((flag) => (
                       <span
@@ -145,13 +138,6 @@ function ClientsContent() {
                       >
                         {flag.label}
                       </span>
-                    ))}
-                  </div>
-                </td>
-                <td className="py-3">
-                  <div className="flex gap-1 overflow-hidden">
-                    {client.tags.slice(0, 2).map((tag) => (
-                      <span key={tag} className="text-xs text-ink-faint whitespace-nowrap">{tag}</span>
                     ))}
                   </div>
                 </td>

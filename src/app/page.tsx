@@ -27,9 +27,9 @@ export default function Home() {
 
   const stats = [
     { value: String(todayMeetings.length), label: 'Meetings today', sub: 'Click below to prep', href: '#schedule', accent: 'border-l-accent-blue' },
-    { value: String(unreadEmails.length), label: 'Emails to review', sub: `${draftsReady} AI drafts ready`, href: '/follow-up', accent: 'border-l-accent-blue' },
-    { value: String(pendingOutreach.length), label: 'Outreach suggested', sub: `${urgentOutreach} urgent`, href: '/outreach', accent: 'border-l-accent-blue' },
-    { value: String(openTasks.length), label: 'Open tasks', sub: `${overdueTasks.length} overdue`, href: '#schedule', accent: 'border-l-accent-blue' },
+    { value: String(unreadEmails.length), label: 'Emails to review', sub: `${draftsReady} AI drafts ready`, href: '/follow-up', accent: 'border-l-accent-purple' },
+    { value: String(pendingOutreach.length), label: 'Outreach suggested', sub: `${urgentOutreach} urgent`, href: '/outreach', accent: 'border-l-accent-amber' },
+    { value: String(openTasks.length), label: 'Open tasks', sub: `${overdueTasks.length} overdue`, href: '#schedule', accent: 'border-l-accent-green' },
     { value: aumFormatted, label: 'Total AUM', sub: `${clients.length} households`, href: '/clients', accent: 'border-l-accent-blue' },
   ];
 
@@ -43,7 +43,7 @@ export default function Home() {
       <p className="mt-2 text-sm text-ink-muted">
         Here&apos;s what needs your attention today.
         {overdueTasks.length > 0 && (
-          <span className="ml-1 font-semibold text-accent-amber">{overdueTasks.length} tasks overdue.</span>
+          <span className="ml-1 font-semibold text-accent-red">{overdueTasks.length} tasks overdue.</span>
         )}
       </p>
 
@@ -53,7 +53,7 @@ export default function Home() {
           <Link
             key={stat.label}
             href={stat.href}
-            className={`group rounded-lg border border-border border-l-[3px] px-4 py-4 transition-colors hover:border-ink/20 ${stat.accent}`}
+            className={`group rounded-lg border border-border border-l-[3px] px-4 py-4 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-ink/20 ${stat.accent}`}
           >
             <p className="text-2xl font-bold tracking-tight text-ink">{stat.value}</p>
             <p className="mt-0.5 text-xs font-medium text-ink-muted">{stat.label}</p>

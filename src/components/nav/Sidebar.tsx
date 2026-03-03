@@ -52,9 +52,9 @@ function CopilotIcon({ className }: { className?: string }) {
 
 const navLinks = [
   { label: 'Dashboard', href: '/', icon: DashboardIcon },
-  { label: 'Clients', href: '/clients', icon: ClientsIcon },
   { label: 'Inbox', href: '/follow-up', icon: InboxIcon },
   { label: 'Outreach', href: '/outreach', icon: OutreachIcon },
+  { label: 'Clients', href: '/clients', icon: ClientsIcon },
   { label: 'Copilot', href: '/chat', icon: CopilotIcon },
 ];
 
@@ -84,11 +84,11 @@ export default function Sidebar() {
       {/* Branding */}
       <Link href="/" className="shrink-0 px-5 pt-5 pb-4 block hover:bg-surface-inset/50 transition-colors">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-ink text-sm font-bold text-white">
-            M
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-blue text-sm font-bold text-white">
+            V
           </div>
           <div>
-            <p className="text-sm font-semibold text-ink leading-tight">Meridian</p>
+            <p className="text-sm font-semibold text-ink leading-tight">Vantage</p>
             <p className="text-[10px] text-ink-faint leading-tight">Wealth Copilot</p>
           </div>
         </div>
@@ -108,14 +108,14 @@ export default function Sidebar() {
               href={href}
               className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors ${
                 isActive
-                  ? 'bg-ink text-white font-medium'
+                  ? 'bg-accent-blue-light text-accent-blue font-medium'
                   : 'text-ink-muted hover:text-ink hover:bg-surface-inset'
               }`}
             >
               <Icon className="h-4 w-4 shrink-0" />
               <span className="flex-1">{label}</span>
               {showBadge && (
-                <span className={`text-[10px] font-medium ${isActive ? 'text-white/70' : 'text-ink-faint'}`}>
+                <span className={`text-[10px] font-medium ${isActive ? 'text-accent-blue/70' : 'text-ink-faint'}`}>
                   {badgeCount}
                 </span>
               )}
@@ -138,7 +138,7 @@ export default function Sidebar() {
             onClick={() => setShowSettings(!showSettings)}
             className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-surface-inset"
           >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-medium text-white">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent-blue to-accent-purple text-xs font-medium text-white">
               {initials}
             </div>
             <div className="min-w-0 flex-1">

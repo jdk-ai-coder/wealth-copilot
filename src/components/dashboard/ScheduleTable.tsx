@@ -129,12 +129,16 @@ export default function ScheduleTable() {
     }
   }
 
-  function typeColor(type: string): string {
+  function typePill(type: string) {
     switch (type) {
-      case 'Meeting': return 'text-accent-blue';
-      case 'Email': return 'text-accent-purple';
-      case 'Outreach': return 'text-orange-600';
-      default: return 'text-ink-muted';
+      case 'Meeting':
+        return <span className="inline-block rounded-full bg-accent-blue-light px-2.5 py-0.5 text-[11px] font-medium text-accent-blue">Meeting</span>;
+      case 'Email':
+        return <span className="inline-block rounded-full bg-accent-purple-light px-2.5 py-0.5 text-[11px] font-medium text-accent-purple">Email</span>;
+      case 'Outreach':
+        return <span className="inline-block rounded-full bg-accent-amber-light px-2.5 py-0.5 text-[11px] font-medium text-accent-amber">Outreach</span>;
+      default:
+        return <span className="text-[11px] text-ink-muted">{type}</span>;
     }
   }
 
@@ -175,7 +179,7 @@ export default function ScheduleTable() {
                 >
                   <td className="whitespace-nowrap py-3 pl-4 pr-6 text-ink-faint">{row.time}</td>
                   <td className="py-3 pr-6">
-                    <span className={`text-xs font-medium ${typeColor(row.type)}`}>{row.type}</span>
+                    {typePill(row.type)}
                   </td>
                   <td className="max-w-xs truncate py-3 pr-6 font-medium text-ink">{row.title}</td>
                   <td className="py-3 pr-6 text-ink-muted">{row.client}</td>
@@ -201,13 +205,13 @@ export default function ScheduleTable() {
             <tr
               key={row.id}
               onClick={() => router.push(row.href)}
-              className={`group cursor-pointer border-b border-border-faint transition-colors hover:bg-accent-blue-light/50 ${
+              className={`group cursor-pointer border-b border-border-faint transition-colors hover:bg-accent-blue-light/60 hover:shadow-sm ${
                 i % 2 === 1 ? 'bg-surface-inset/30' : ''
               }`}
             >
               <td className="whitespace-nowrap py-3 pl-4 pr-6 font-semibold text-ink">{row.time}</td>
               <td className="py-3 pr-6">
-                <span className={`text-xs font-medium ${typeColor(row.type)}`}>{row.type}</span>
+                {typePill(row.type)}
               </td>
               <td className="max-w-xs truncate py-3 pr-6 font-medium text-ink">{row.title}</td>
               <td className="py-3 pr-6 text-ink-muted">{row.client}</td>

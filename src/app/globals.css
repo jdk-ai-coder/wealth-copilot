@@ -1,24 +1,26 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-surface: #f6f5f3;
+  --color-surface: #F9FAFB;
   --color-surface-raised: #ffffff;
-  --color-surface-inset: #efeee9;
-  --color-ink: #111111;
-  --color-ink-muted: #555555;
-  --color-ink-faint: #888888;
-  --color-border: #ddd9d2;
-  --color-border-faint: #eae7e1;
+  --color-surface-inset: #F3F4F6;
+  --color-ink: #111827;
+  --color-ink-muted: #6B7280;
+  --color-ink-faint: #9CA3AF;
+  --color-border: #E5E7EB;
+  --color-border-faint: #F3F4F6;
 
-  /* Accent palette — muted, professional */
-  --color-accent-blue: #3b6fa0;
-  --color-accent-blue-light: #eef3f8;
-  --color-accent-green: #3a7d5c;
-  --color-accent-green-light: #eef6f1;
-  --color-accent-amber: #9a7030;
-  --color-accent-amber-light: #faf5eb;
-  --color-accent-purple: #6b5b95;
-  --color-accent-purple-light: #f3f0f8;
+  /* Accent palette — vibrant, modern */
+  --color-accent-blue: #3B82F6;
+  --color-accent-blue-light: #EFF6FF;
+  --color-accent-green: #10B981;
+  --color-accent-green-light: #ECFDF5;
+  --color-accent-amber: #F59E0B;
+  --color-accent-amber-light: #FFFBEB;
+  --color-accent-purple: #8B5CF6;
+  --color-accent-purple-light: #F5F3FF;
+  --color-accent-red: #EF4444;
+  --color-accent-red-light: #FEF2F2;
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -68,4 +70,22 @@ body {
 }
 .animate-pulse-dot {
   animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+/* Card hover lift */
+.card-hover {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Staggered fade-in-up for list entries */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.35s ease-out both;
 }

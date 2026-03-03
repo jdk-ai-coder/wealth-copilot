@@ -160,9 +160,9 @@ export default function OutreachPage() {
   }
 
   const stats = [
-    { value: String(allPending.length), label: 'Suggested', accent: 'border-l-ink/20' },
-    { value: String(urgentCount), label: 'Urgent', accent: 'border-l-ink/20' },
-    { value: String(completedItems.length), label: 'Completed This Week', accent: 'border-l-ink/20' },
+    { value: String(allPending.length), label: 'Suggested', accent: 'border-l-accent-blue' },
+    { value: String(urgentCount), label: 'Urgent', accent: 'border-l-accent-blue' },
+    { value: String(completedItems.length), label: 'Completed This Week', accent: 'border-l-accent-blue' },
   ];
 
   return (

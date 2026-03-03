@@ -284,6 +284,28 @@ export default function FollowUpPage() {
 
             {/* Email body */}
             <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
+              {/* Thread history */}
+              {selectedEmail.thread && selectedEmail.thread.length > 0 && (
+                <div className="space-y-4 border-b border-border pb-6">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-faint">Earlier in this thread</p>
+                  {selectedEmail.thread.map((msg) => (
+                    <div key={msg.id} className="rounded-lg border border-border-faint bg-surface-inset/30 px-4 py-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-medium text-ink">{msg.from}</span>
+                        <span className="text-[10px] text-ink-faint">
+                          {new Date(msg.date).toLocaleString('en-US', {
+                            weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+                          })}
+                        </span>
+                      </div>
+                      <div className="whitespace-pre-wrap text-xs leading-relaxed text-ink-faint">
+                        {msg.body}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               {/* Original message */}
               <div>
                 <div className="flex items-center justify-between mb-3">

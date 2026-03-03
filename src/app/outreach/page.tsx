@@ -5,21 +5,10 @@ import { useRouter } from 'next/navigation';
 import { outreachSuggestions } from '../../data/outreach';
 import { OutreachSuggestion } from '../../lib/types';
 import { useToast } from '../../hooks/useToast';
+import { timeAgo } from '../../lib/utils';
 
 type FilterKey = 'all' | 'Market & Portfolio' | 'Life Events' | 'Account Activity' | 'Relationship' | 'Planning Milestones';
 type DismissReason = 'Already handled' | 'Not relevant' | 'Client preference' | 'Other';
-
-function timeAgo(iso: string): string {
-  const now = new Date('2026-03-02T12:00:00Z');
-  const then = new Date(iso);
-  const diffMs = now.getTime() - then.getTime();
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  if (diffHours < 1) return 'Just now';
-  if (diffHours < 24) return `${diffHours}h ago`;
-  const diffDays = Math.floor(diffHours / 24);
-  if (diffDays === 1) return '1 day ago';
-  return `${diffDays} days ago`;
-}
 
 function priorityOrder(p: string): number {
   switch (p) {
@@ -33,28 +22,21 @@ function priorityOrder(p: string): number {
 
 function PriorityBadge({ priority }: { priority: string }) {
   const styles: Record<string, string> = {
-    urgent: 'bg-red-100 text-red-700',
-    high: 'bg-orange-100 text-orange-700',
-    medium: 'bg-amber-100 text-amber-700',
-    low: 'bg-gray-100 text-gray-500',
+    urgent: 'bg-red-50 text-red-600 border border-red-200',
+    high: 'bg-surface-inset text-ink border border-border',
+    medium: 'bg-surface-inset text-ink-muted border border-border-faint',
+    low: 'bg-surface-inset text-ink-faint border border-border-faint',
   };
   return (
-    <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold capitalize ${styles[priority] || styles.low}`}>
+    <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium capitalize ${styles[priority] || styles.low}`}>
       {priority}
     </span>
   );
 }
 
 function CategoryBadge({ category }: { category: string }) {
-  const styles: Record<string, string> = {
-    'Market & Portfolio': 'bg-accent-blue-light text-accent-blue',
-    'Life Events': 'bg-accent-purple-light text-accent-purple',
-    'Account Activity': 'bg-accent-green-light text-accent-green',
-    'Relationship': 'bg-accent-amber-light text-accent-amber',
-    'Planning Milestones': 'bg-accent-blue-light text-accent-blue',
-  };
   return (
-    <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium ${styles[category] || 'bg-surface-inset text-ink-faint'}`}>
+    <span className="rounded-full bg-surface-inset px-2.5 py-0.5 text-[11px] font-medium text-ink-muted">
       {category}
     </span>
   );
@@ -178,9 +160,9 @@ export default function OutreachPage() {
   }
 
   const stats = [
-    { value: String(allPending.length), label: 'Suggested', accent: 'border-l-accent-blue bg-accent-blue-light' },
-    { value: String(urgentCount), label: 'Urgent', accent: 'border-l-red-500 bg-red-50' },
-    { value: String(completedItems.length), label: 'Completed This Week', accent: 'border-l-accent-green bg-accent-green-light' },
+    { value: String(allPending.length), label: 'Suggested', accent: 'border-l-ink/20' },
+    { value: String(urgentCount), label: 'Urgent', accent: 'border-l-ink/20' },
+    { value: String(completedItems.length), label: 'Completed This Week', accent: 'border-l-ink/20' },
   ];
 
   return (
@@ -435,7 +417,7 @@ export default function OutreachPage() {
                 />
               ) : (
                 <div className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
-                  {isEdited ? editedText : (draftItem.draftBody || `Dear ${draftItem.clientName},\n\nI wanted to reach out regarding: ${draftItem.trigger}\n\n${draftItem.suggestedAction}\n\nPlease let me know if you have any questions or would like to schedule a time to discuss.\n\nBest regards,\nSarah Mitchell, CFP®\nMeridian Wealth Partners`)}
+                  {isEdited ? editedText : (draftItem.draftBody || `Hi ${draftItem.clientName},\n\nI wanted to reach out regarding: ${draftItem.trigger}\n\n${draftItem.suggestedAction}\n\nLet me know if you'd like to discuss — happy to jump on a quick call.\n\nBest,\nSarah`)}
                 </div>
               )}
             </div>
@@ -462,7 +444,7 @@ export default function OutreachPage() {
                   <>
                     <button
                       onClick={() => {
-                        const body = draftItem.draftBody || `Dear ${draftItem.clientName},\n\nI wanted to reach out regarding: ${draftItem.trigger}\n\n${draftItem.suggestedAction}\n\nPlease let me know if you have any questions or would like to schedule a time to discuss.\n\nBest regards,\nSarah Mitchell, CFP®\nMeridian Wealth Partners`;
+                        const body = draftItem.draftBody || `Hi ${draftItem.clientName},\n\nI wanted to reach out regarding: ${draftItem.trigger}\n\n${draftItem.suggestedAction}\n\nLet me know if you'd like to discuss — happy to jump on a quick call.\n\nBest,\nSarah`;
                         setEditedText(isEdited ? editedText : body);
                         setIsEditing(true);
                       }}

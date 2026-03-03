@@ -1,4 +1,4 @@
-import { Email } from '../lib/types';
+import { Email, ThreadMessage } from '../lib/types';
 
 export const emails: Email[] = [
   // ── Inbound emails (spec-required) ──────────────────────────────────
@@ -27,20 +27,18 @@ Rose Chen`,
     type: 'inbound',
     draftReply: {
       subject: 'Re: Referral from Harriet Spencer — seeking financial guidance',
-      body: `Dear Rose,
+      body: `Hi Rose,
 
-Thank you so much for reaching out, and please thank Harriet for the kind referral — she and William are wonderful clients and we truly value their trust.
+Thanks so much for reaching out — and please thank Harriet for the referral! She and William are wonderful clients.
 
-I'd love to learn more about your situation and explore how our team might be able to help. Based on what you've shared, it sounds like you and Kevin are at an exciting but complex stage — equity compensation, small business income, and a targeted early retirement date all create real opportunities for strategic planning, particularly around tax optimization and investment structuring.
+It sounds like you and Kevin are at an exciting stage. Equity comp, small business income, and an early retirement target create a lot of great planning opportunities, especially around taxes and investment structuring.
 
-I have availability this Thursday, March 5th at 2:30 PM or next Tuesday, March 10th at 3:00 PM for an introductory call. The call typically runs about 30 minutes, and there's no obligation — it's simply a chance for us to get to know each other and see if there's a good fit.
+I have time this Thursday at 2:30 PM or next Tuesday at 3:00 PM for an intro call — about 30 minutes, no obligation. If either works, I'll send a calendar invite and a short questionnaire so I can come prepared.
 
-If either of those times works, please let me know and I'll send over a calendar invitation along with a brief questionnaire to help me prepare for our conversation.
+Looking forward to it!
 
-Looking forward to connecting with you.
-
-Warm regards,
-Sarah Mitchell, CFP® | Senior Financial Advisor | Meridian Wealth Partners`,
+Best,
+Sarah Mitchell, CFP® | Meridian Wealth Partners`,
       tone: 'warm',
       status: 'draft',
     },
@@ -72,26 +70,38 @@ Margaret`,
     isRead: false,
     priority: 'high',
     type: 'inbound',
+    thread: [
+      {
+        id: 'thread-002-1',
+        from: 'Sarah Mitchell',
+        date: '2026-02-20T14:30:00Z',
+        body: 'Hi Margaret,\n\nJust wanted to let you know I ran the updated retirement projections with the new timeline. Your plan probability is sitting at 87%, which is solid. I\'ll have the full report ready for our March 2nd meeting.\n\nAlso, I found a great ACA marketplace plan option for your healthcare bridge — I think you\'ll be pleasantly surprised at the cost.\n\nSee you soon!\nSarah',
+      },
+      {
+        id: 'thread-002-2',
+        from: 'Margaret Kim',
+        date: '2026-02-21T09:15:00Z',
+        body: 'Thanks Sarah, that\'s reassuring to hear. Robert and I are looking forward to the meeting. I know I worry too much sometimes but it helps knowing the numbers are still strong.\n\nSee you on the 2nd!\nMargaret',
+      },
+    ],
     draftReply: {
       subject: 'Re: Concerned about market volatility — can we chat?',
-      body: `Dear Margaret,
+      body: `Hi Margaret,
 
-Thank you for sharing your concerns ahead of our meeting today — it shows great self-awareness, and I want you to know that your feelings are completely normal and valid. Market volatility can feel especially unsettling when you're approaching a major life transition like retirement.
+Totally understand the unease — those headlines are hard to ignore, especially with retirement on the horizon. Let me give you some quick reassurance before we meet today.
 
-Let me address your questions directly so you have some peace of mind before we meet:
+Your portfolio is doing exactly what it was designed to do. The S&P dropped ~4% last week, but your portfolio was only down about 1.8% because of the bond and cash buffer we built in. That 35% fixed income + 10% cash allocation is doing its job.
 
-First, your portfolio is actually performing exactly as designed during this pullback. While the S&P 500 dropped about 4% last week, your combined portfolio declined only about 1.8%. This is because we intentionally built your allocation with a significant fixed income and cash buffer specifically for moments like this. Your 35% bond and 10% cash allocation is doing its job as a shock absorber.
+On your specific questions:
 
-Regarding your plan probability — I ran an updated projection this morning. It has slipped from 87% to approximately 85%, which is a very modest change and well within normal fluctuation ranges. A week of market movement does not fundamentally alter a multi-decade retirement plan. We'll review this together in detail today.
+1. **Allocation changes:** I wouldn't recommend shifting more to bonds right now. Selling after a 4% dip locks in losses. We built this portfolio for exactly these moments.
+2. **Plan probability:** Ran the numbers this morning — we've slipped from 87% to about 85%. That's normal fluctuation, not a red flag.
+3. **Cash cushion:** You have roughly 24 months of living expenses in cash and short-term bonds. You wouldn't need to sell any equities even if the market stayed flat for two years.
 
-On the cash cushion question — this is actually the strongest part of your position. Between your savings, Robert's continued income, and the cash/short-term bond allocation in your portfolio, you have approximately 24 months of living expenses available without needing to sell any equities. If a downturn persists, you would draw from bonds and cash first, giving your equity holdings time to recover.
+Let's walk through the updated projections at our 11:30 meeting. I think you'll feel a lot better once we look at the scenarios together.
 
-I do NOT recommend making any major allocation changes right now. Selling equities after a 4% decline would lock in losses and likely hurt your long-term returns. We built this portfolio to weather exactly these kinds of periods.
-
-Let's discuss all of this in detail at our 11:30 meeting. I'll have updated projections and some scenarios to walk through that I think will give you confidence.
-
-Warm regards,
-Sarah Mitchell, CFP® | Senior Financial Advisor | Meridian Wealth Partners`,
+Talk soon,
+Sarah`,
       tone: 'warm',
       status: 'draft',
     },
@@ -224,31 +234,38 @@ Eleanor`,
     isRead: false,
     priority: 'medium',
     type: 'inbound',
+    thread: [
+      {
+        id: 'thread-005-1',
+        from: 'Sarah Mitchell',
+        date: '2026-02-25T16:00:00Z',
+        body: 'Hi Eleanor,\n\nIt was wonderful meeting with you today. I know going through Harold\'s papers is emotional, but you\'re doing a great job. We made real progress on the consolidation plan.\n\nIf you find any more statements as you continue going through his office, just bring them to our next meeting or scan and email them to me. No rush at all.\n\nWarmly,\nSarah',
+      },
+      {
+        id: 'thread-005-2',
+        from: 'Eleanor Vance',
+        date: '2026-02-26T10:20:00Z',
+        body: 'Dear Sarah,\n\nThank you for being so kind today. I will keep looking through his desk. There are still two drawers I haven\'t gotten to yet.\n\nEleanor',
+      },
+    ],
     draftReply: {
       subject: 'Re: Found more of Harold\'s accounts',
-      body: `Dear Eleanor,
+      body: `Hi Eleanor,
 
-Please don't apologize — this is exactly the kind of discovery we hoped for, and you're doing a wonderful job working through Harold's records. Finding these accounts now means we can include them in your comprehensive plan rather than having them sit forgotten.
+Please don't apologize — this is exactly the kind of thing we want to find. Every account we uncover is a step toward the full picture.
 
-Here's what I'd suggest for each item:
+Here's my take on each item:
 
-**Vanguard Account ($42,000):** Yes, please bring the most recent statement to our meeting. This is likely eligible for the stepped-up basis we discussed — meaning any gains that accumulated during Harold's lifetime were effectively "reset" at his passing. We'll add this to the consolidation queue and transfer it to your Schwab account with the others.
+**Vanguard ($42K):** Bring the statement to our next meeting. This likely got a stepped-up basis, so we're in good shape tax-wise. We'll transfer it to your Schwab account with the rest.
 
-**Edward Jones Account ($18,000):** Same approach — bring the statement and we'll initiate the transfer. If it's individual stocks, we'll want to review each position to decide whether to keep or sell them as part of the consolidation.
+**Edward Jones ($18K):** Same — bring the statement and we'll start the transfer. If it's individual stocks, we'll review what to keep vs. sell.
 
-**Pacific Life Insurance Policy ($250,000):** This is potentially significant and worth investigating immediately. I'd recommend you:
-1. Call Pacific Life at 1-800-800-7681 and ask about the status of policy [policy number from the statement]
-2. Have Harold's death certificate handy — they'll likely need it
-3. If the policy was active at his passing, you may be the beneficiary and the $250,000 death benefit could still be claimable
+**Pacific Life policy ($250K):** This one could be significant. I'd suggest calling Pacific Life at 1-800-800-7681 with Harold's death certificate handy to check the policy status. If it was active when he passed, you may still be able to claim the benefit. Happy to make that call for you if you'd prefer — just send me a copy of the policy doc.
 
-If you'd prefer, I can make the initial call to Pacific Life on your behalf — just let me know and I'll need a copy of the policy document and the death certificate.
+Take this at whatever pace feels right. We're not in a rush. Bring everything you've found to our next meeting and we'll sort through it together.
 
-Eleanor, the emotions you're feeling are completely natural. Going through a loved one's financial life is deeply personal work. Please take it at whatever pace feels right. We're not in a rush, and every account we find is a positive step toward the clarity and simplicity you deserve.
-
-I'll see you at our next meeting. Bring whatever you've found and we'll sort through it together.
-
-With warm regards,
-Sarah Mitchell, CFP® | Senior Financial Advisor | Meridian Wealth Partners`,
+Warmly,
+Sarah`,
       tone: 'warm',
       status: 'draft',
     },
@@ -285,6 +302,14 @@ James`,
     priority: 'medium',
     type: 'follow-up',
     meetingId: 'meeting-006',
+    thread: [
+      {
+        id: 'thread-006-1',
+        from: 'Sarah Mitchell',
+        date: '2026-02-26T09:00:00Z',
+        body: 'Hi James and Patricia,\n\nThank you again for a great discovery call yesterday. I\'m excited to work with you both on building a comprehensive plan.\n\nAs discussed, here are the next steps:\n1. Please gather the beneficiary IRA statements from Fidelity\n2. Forward your RSU vesting schedule when you receive it from HR\n3. I\'ll begin modeling the CA tax implications\n\nI\'m targeting March 15th to have a draft plan ready. In the meantime, don\'t hesitate to reach out with any questions.\n\nBest,\nSarah Mitchell, CFP®',
+      },
+    ],
     draftReply: {
       subject: 'Re: Great connecting — follow-up from our discovery call',
       body: `Hi James and Patricia,
@@ -337,24 +362,24 @@ Eleanor`,
     meetingId: 'meeting-007',
     draftReply: {
       subject: 'Re: Thank you for your patience today',
-      body: `Dear Eleanor,
+      body: `Hi Eleanor,
 
-Please never feel the need to apologize for your emotions — they are a natural and healthy part of this process, and I consider it a privilege to walk alongside you during this transition. Harold built a wonderful financial foundation for your family, and our job together is simply to organize and optimize what he created so that it continues to serve you and your children well.
+Please never apologize — this is all part of the process, and Harold clearly built a great foundation. Our job is just to organize it so it keeps working for you.
 
-I'm so glad the consolidation plan resonated with you. Once we have everything in one place, managing your finances will feel much simpler and less overwhelming. That clarity is one of the most valuable things we can achieve together.
+Glad the consolidation plan makes sense! Once everything's in one place, it'll feel a lot more manageable.
 
-Regarding your follow-up items:
+On your follow-ups:
 
-For the Vanguard and Edward Jones statements — perfect, please bring them to our next meeting on March 15th. I'll have the transfer paperwork ready to go.
+**Vanguard & Edward Jones:** Bring the statements on March 15th — I'll have the transfer paperwork ready.
 
-For Thomas — I have availability for a call on March 12th at 10:00 AM or March 13th at 2:00 PM. The call would run about 30 minutes, and we'd cover the power of attorney discussion, Harold's estate plan status, and any questions Thomas has about the overall financial picture. Could you check with him and let me know which time works?
+**Thomas:** I can do March 12th at 10 AM or March 13th at 2 PM for a 30-minute call. We'd cover the POA discussion, estate plan status, and any questions he has.
 
-As for the watercolor class connection with Harriet — I'd be delighted to facilitate that! Harriet is a wonderful person and I know she'd enjoy having you in the class. I'll reach out to her separately to make the introduction.
+**Watercolor class with Harriet:** Love this idea! I'll reach out to Harriet and make the intro.
 
-Looking forward to seeing you on the 15th, Eleanor. You're doing beautifully.
+See you on the 15th!
 
-With warmth,
-Sarah Mitchell, CFP® | Senior Financial Advisor | Meridian Wealth Partners`,
+Warmly,
+Sarah`,
       tone: 'warm',
       status: 'draft',
     },

@@ -90,6 +90,120 @@ For **Torres's new portfolio**:
 
 Tell me which clients or fund categories you'd like to compare, and I'll pull detailed analytics.`,
 
+  'Roth conversion options for 2026-2028': `Great question — let me walk you through the Millmans' Roth conversion strategy:
+
+**Current Situation:**
+- Deborah (64) & John (65) have **$1.76M in Traditional IRAs** combined
+- RMDs begin at age 73 (2035 for Deborah, 2034 for John)
+- Current tax bracket: **24%** (taxable income ~$178K with John's Social Security)
+- Deborah considering part-time consulting — could add $40-60K/year
+
+**Recommended Conversion Ladder:**
+
+| Year | Convert | Bracket | Tax Cost | Cumulative |
+|------|---------|---------|----------|------------|
+| 2026 | $95,000 | 24% | $22,800 | $22,800 |
+| 2027 | $100,000 | 24% | $24,000 | $46,800 |
+| 2028 | $85,000 | 24% | $20,400 | $67,200 |
+
+**Key Considerations:**
+1. If Deborah starts consulting in 2027, we should front-load the 2026 conversion to $100K and reduce 2027 to $80K
+2. IRMAA thresholds — staying under $206K MAGI keeps Medicare premiums at standard rates
+3. Each conversion dollar grows tax-free for 15+ years — projected lifetime tax savings of **$180,000-$240,000**
+4. The DAF contribution in Q4 can offset some conversion income
+
+**Next Step:** I'm finishing the detailed model by March 5 — we'll review the three scenarios (no consulting, part-time consulting, full consulting) at today's 10 AM meeting.
+
+Want me to pull up the specific account balances or the DAF strategy?`,
+
+  'David Nakamura\'s concentrated stock exposure': `Here's a breakdown of David Nakamura's concentrated stock position:
+
+**Current Exposure:**
+- **Company:** NovaTech Inc. (Series D, pre-IPO)
+- **Shares held:** 14,800 shares
+- **Estimated value:** $2.1M at current $142/share
+- **As % of total assets:** **39%** of $5.42M total portfolio
+- **Cost basis:** $296,000 (effective basis ~$20/share from early RSU grants)
+- **Unrealized gain:** $1.8M (610% return)
+
+**Upcoming Events:**
+- **March 15:** Next RSU vest — 2,400 additional shares (~$340K)
+- If held, concentration would rise to **$2.44M / $5.76M = 42%**
+- **IPO expected:** ~18 months out — creates additional liquidity event
+
+**Risk Assessment:** The position exceeds our 25% single-stock guideline by 14 percentage points. A 30% decline in NovaTech would erase ~$630K in net worth. With three young kids and $28K/month expenses, this is a material risk.
+
+**Recommended Action Plan:**
+1. **Sell 75% of March 15 vest** (1,800 shares → ~$255K after taxes)
+2. **Direct $100K** toward Lisa's practice buy-in loan (5.2% rate)
+3. **Invest $155K** into diversified portfolio
+4. **Establish 10b5-1 plan** (compliance review completing this week) — systematic sales of 500 shares/quarter starting Q2
+5. **Target:** Reduce concentration to **under 25%** by Q4 2027
+
+The 10b5-1 plan signature should be ready by March 20th. Shall I draft the email to David with this recommendation?`,
+
+  'tax-loss harvesting opportunities': `Here are the current tax-loss harvesting opportunities across your book:
+
+**Immediate Opportunities (Q1 2026):**
+
+1. **Deborah & John Millman** — Joint Brokerage
+   - BND (Vanguard Total Bond Market): Down **-1.2%**, ~$4,320 loss harvestable
+   - Swap to: SCHZ (Schwab US Aggregate Bond) — similar exposure, avoids wash sale
+   - **Tax savings: ~$1,037** at 24% bracket
+
+2. **Harriet & William Spencer** — Joint Brokerage & IRA
+   - VCIT (Intermediate Corporate Bond): Down **-2.3%**, ~$9,880 loss
+   - BND (Total Bond Market): Down **-1.2%**, ~$7,560 loss
+   - VGSH (Short-Term Treasury): Down **-1.4%**, ~$4,080 loss
+   - **Combined harvestable: $21,520 → Tax savings: ~$3,228** at 15% cap gains rate
+
+3. **Dr. Benjamin & Claire Stern** — Joint Brokerage
+   - BND: Down **-1.2%**, ~$4,860 loss
+   - Swap to: AGG (iShares Core US Aggregate Bond)
+   - **Tax savings: ~$1,749** at 35% bracket (highest value harvest)
+
+**Total Harvestable Losses: ~$30,700**
+**Estimated Tax Savings: ~$6,014**
+
+**Note:** Bond positions are the primary opportunity this quarter. Equity positions are all positive YTD. The rising rate environment has created temporary bond losses that are ideal for harvesting without changing risk exposure.
+
+**Wash Sale Rules:** Need 31-day separation before repurchasing substantially identical funds. I recommend permanent tax-lot swaps (BND↔SCHZ) rather than temporary sells.
+
+Want me to generate the trade tickets for any of these?`,
+
+  'Eleanor Vance\'s account consolidation progress': `Here's Eleanor's account consolidation status:
+
+**Overview:** Consolidating assets from **8 institutions** into Schwab primary account.
+
+| # | Institution | Amount | Status | Notes |
+|---|-------------|--------|--------|-------|
+| 1 | Edward Jones (Joint) | $280,000 | **Completed** | Transferred Feb 15 |
+| 2 | Fidelity (Harold's 401k) | $195,000 | **Completed** | Rolled to IRA Feb 20 |
+| 3 | Denver Credit Union | $42,000 | **Completed** | Cash transfer Feb 22 |
+| 4 | Vanguard (Index Fund) | $42,000 | **In Progress** | Paperwork submitted — 5-7 business days |
+| 5 | Edward Jones (Small) | $18,000 | **In Progress** | Eleanor bringing statements to next meeting |
+| 6 | First Bank of Denver | $85,000 | **Pending** | Need Eleanor's signature on transfer form |
+| 7 | Mountain Credit Union | $28,000 | **Pending** | CD matures April 15 — will transfer after |
+| 8 | Pacific Life Insurance | $250,000 | **Investigating** | Found policy in Harold's papers — may be unclaimed benefit |
+
+**Progress: 3 of 8 complete (37.5%)**
+**Target completion: End of Q2 2026**
+
+**Key Notes:**
+- Eleanor is going through Harold's desk drawer by drawer — emotionally difficult but making progress
+- The Pacific Life policy ($250K face value) could be a significant discovery. Need to call 1-800-800-7681 with death certificate to check status
+- Monthly withdrawal of $4,500 set up from Schwab for living expenses
+- Survivor Social Security: $3,800/month (Harold's record)
+- Son Thomas has agreed to join a call about POA and estate plan updates
+
+**Next Steps:**
+1. Follow up on Vanguard transfer status
+2. Prepare First Bank transfer paperwork for Eleanor's signature
+3. Call Pacific Life re: insurance policy status
+4. Schedule call with Thomas (offered March 12 at 10 AM or March 13 at 2 PM)
+
+Want me to draft the follow-up email to Eleanor about the Pacific Life policy?`,
+
   'Client risk assessment': `Here's a risk assessment summary across your active clients:
 
 **Clients Requiring Attention:**
@@ -111,6 +225,201 @@ Tell me which clients or fund categories you'd like to compare, and I'll pull de
 7. **Tony & Angela Russo** — Business risk is primary concern, but $3M franchise value provides strong asset base. Succession plan reduces key-person risk over time.
 
 Would you like a deeper dive on any client's risk profile?`,
+
+  // ── Short follow-up / client-name triggers ─────────────────────────
+  'millman': `Here's a quick snapshot for **Deborah & John Millman**:
+
+**Key Facts:** Ages 64/65 · Moderate risk · Client since 2018
+**Total Assets:** $4.2M · **YTD Return:** +8.7%
+**Portfolio:** $3.86M across 6 accounts (Joint Brokerage, 2 Traditional IRAs, 2 Roth IRAs, 529 Plan)
+
+**Active Priorities:**
+1. Roth conversion ladder — $85K converted in January, modeling $95-100K for 2026
+2. Estate plan update needed — new grandchild Oliver (born March 2026)
+3. DAF contribution timing — $30K in appreciated stock planned for Q4
+4. Medicare supplement review for Deborah (IRMAA considerations if she consults)
+
+**Today:** Q2 Financial Review at 10:00 AM · Zoom link ready · Prep doc complete
+
+What would you like to explore — Roth conversion details, portfolio holdings, or meeting prep?`,
+
+  'nakamura': `Here's a quick snapshot for **David & Lisa Nakamura**:
+
+**Key Facts:** Ages 38/36 · Aggressive risk · Client since 2022
+**Total Assets:** $5.4M · **YTD Return:** +14.8%
+**Portfolio:** $5.42M — but **39% concentrated in employer stock** (NovaTech Inc.)
+
+**Critical Issues:**
+1. **Concentration risk:** $2.1M in single stock — well above 25% guideline
+2. **RSU vest March 15:** 2,400 shares (~$340K) — need sell/hold decision
+3. **10b5-1 plan:** Compliance review in progress, signature target March 20
+4. Lisa's practice buy-in loan: $340K at 5.2% — discuss partial payoff from RSU proceeds
+
+**Recent email:** David asked about March 15 vest strategy. AI draft reply recommends selling 75% (1,800 shares), directing $100K to Lisa's loan.
+
+Want me to pull up the detailed holdings, RSU analysis, or the draft email?`,
+
+  'kim': `Here's a quick snapshot for **Margaret & Robert Kim**:
+
+**Key Facts:** Ages 58/56 · Moderate risk · Client since 2020
+**Total Assets:** $2.8M · **YTD Return:** +6.1%
+**Portfolio:** Moderate allocation appropriate for pre-retirement
+
+**Active Priorities:**
+1. **Plan probability dropped** from 91% to 87% after Margaret's early retirement modeling
+2. Healthcare bridge strategy (age 58-65) — ACA marketplace plan comparison ready
+3. Robert's pension analysis — full vesting at 63
+4. Social Security optimization — when should each claim?
+5. Home downsizing consideration ($850K home, $180K mortgage)
+
+**Today:** Retirement Planning Check-in at 11:30 AM · Margaret emailed this morning concerned about market volatility
+**Email context:** S&P dropped 4%, Margaret worried about retirement timeline. Portfolio only down 1.8% thanks to bond/cash buffer.
+
+Want me to pull up the retirement projection, the email draft, or the healthcare comparison?`,
+
+  'debbie': `I think you're referring to **Deborah Millman** (Deborah & John Millman):
+
+**Key Facts:** Age 64 · Moderate risk · $4.2M total assets · +8.7% YTD
+**Meeting today:** 10:00 AM — Q2 Financial Review
+
+**Current Focus Areas:**
+- Roth conversion ladder: $85K converted in Jan, modeling 2026-2028 strategy
+- Estate plan update for new grandchild Oliver
+- DAF contribution timing for Q4 tax optimization
+- Medicare supplement — Deborah considering part-time consulting (IRMAA impact)
+
+**Portfolio Highlights:**
+- 6 accounts: Joint Brokerage ($1.28M), 2 Traditional IRAs ($1.76M), 2 Roth IRAs ($800K), 529 ($360K)
+- Top holdings: VFIAX, VTI, QQQ, MSFT, AAPL
+- Bond allocation: BND, VTIP — performing as buffer in recent volatility
+
+What would you like to know specifically about Deborah?`,
+
+  'vance': `Here's a quick snapshot for **Eleanor Vance**:
+
+**Key Facts:** Age 72 · Conservative risk · Widow (Harold passed 14 months ago)
+**Total Assets:** $3.8M · **YTD Return:** +3.8%
+**Income:** $4,500/month systematic withdrawal + $3,800/month Survivor SS
+
+**Active Priorities:**
+1. **Account consolidation:** 3 of 8 transfers complete (Schwab, Fidelity, credit union) — 5 remaining
+2. Newly discovered accounts: Vanguard ($42K) and Edward Jones ($18K)
+3. **Pacific Life insurance policy** ($250K face value) found — may be unclaimed benefit
+4. Estate plan needs update — documents pre-date Harold's passing
+5. Son Thomas joining a call about POA (offered March 12 or 13)
+
+**Recent emails:** Eleanor found more accounts in Harold's desk. She's emotional but making good progress.
+
+Want me to pull up the consolidation tracker, draft the Pacific Life follow-up, or review her portfolio?`,
+
+  'russo': `Here's a quick snapshot for **Tony & Angela Russo**:
+
+**Key Facts:** Ages 55/53 · Moderate risk · Business owners (2 Chick-fil-A franchises)
+**Total Assets:** $1.5M (personal) + ~$3M (business value) · **YTD Return:** +5.4%
+
+**Active Priorities:**
+1. **Business succession plan:** 5-year framework to transition one franchise to son Marco
+2. **Lease renewal Aug 2026:** Location 2 — landlord offering to sell at $1.8M. Buy vs. renew analysis needed
+3. Solo 401(k) conversion from SEP-IRA — unlocks Roth contributions + loan provisions
+4. Buy-sell agreement stale (last updated 2022) — needs revision
+5. "Big beautiful bill" tax implications — Tony asking about business rates, estate exemptions, capital gains
+
+**Recent email:** Tony following up on succession planning session. Marco wants to join March 25 meeting.
+
+Want me to pull up the succession timeline, the real estate analysis, or the tax bill impact?`,
+
+  'stern': `Here's a quick snapshot for **Dr. Benjamin & Claire Stern**:
+
+**Key Facts:** Ages 48/46 · Moderate-Aggressive risk · $6.2M total assets · +7.9% YTD
+**Meeting today:** 9:00 AM — Q2 Financial Review *(currently in progress)*
+
+**Active Priorities:**
+1. **Practice valuation & transition planning** — Benjamin owns 40%, engaging third-party firm in Q2
+2. **Defined benefit plan optimization** — $185K contribution for 2025 already made
+3. **529 catch-up** — Twin daughters (16) start college in 2 years, significant funding gap
+4. **Insurance review overdue** — Malpractice & umbrella policies not reviewed in 18+ months
+
+**Portfolio Highlights:**
+- Top holdings: VOO ($1.77M), VGT ($699K), NVDA ($356K)
+- Defined benefit plan performing well
+- 529s need catch-up: $360K + $334K currently funded
+
+What would you like to explore?`,
+
+  'gordon': `Here's a quick snapshot for **James & Patricia Gordon**:
+
+**Key Facts:** Ages 52/50 · Moderate-Aggressive risk · **New client** (2026)
+**Total Assets:** $1.8M · **YTD Return:** +6.4%
+
+**Active Priorities:**
+1. **Beneficiary IRA** ($380K from James's mother) — 10-year rule distribution strategy needed
+2. **RSU vesting** — ~$200K/year over 4 years, CA state tax impact significant
+3. **529 funding gap** — son at USC, daughter at Oregon State
+4. **CA tax optimization** — moved from OR (0% state tax) to CA (13.3% top rate)
+5. Patricia's Traditional IRA — not deductible at their income, need backdoor Roth strategy
+
+**Recent email:** James following up from discovery call with questions about beneficiary IRA, RSU schedule, Patricia's IRA deduction, and 529 consolidation.
+**Draft plan:** Targeting March 15 delivery
+
+Want me to pull up the tax modeling, the beneficiary IRA strategy, or the email draft?`,
+
+  'delgado': `Here's a quick snapshot for **Frank Delgado**:
+
+**Key Facts:** Age 46 · Moderate risk · Recently divorced (Feb 2026)
+**Total Assets:** $820K · **YTD Return:** +4.2%
+**Meeting today:** 2:00 PM — Financial Reset Review
+
+**Critical Issues:**
+1. **Emergency fund depleted** — only $12K (was $45K before legal fees)
+2. **Beneficiary updates pending** — all accounts still list ex-spouse
+3. QDRO processing: $210K transfer from 401(k) to ex-wife in progress
+4. College planning: 2 kids (14, 11) with shared custody
+5. New budget needed — $2,800/month rent in LoDo condo
+
+**Priority Order:**
+1. Immediate: Update all beneficiary designations
+2. 30 days: Rebuild emergency fund to $25K minimum
+3. 60 days: Finalize QDRO and updated estate documents
+4. 90 days: Reassess college funding with split household costs
+
+Want me to pull up the meeting prep, the budget template, or the beneficiary update checklist?`,
+
+  'torres': `Here's a quick snapshot for **Sandra & Michael Torres**:
+
+**Key Facts:** Ages 38/40 · Moderate risk · **New clients** (workplace conversion from Edelman seminar)
+**Total Assets:** $320K · **YTD Return:** +5.8%
+**Meeting today:** 3:30 PM — Onboarding
+
+**Critical Issues:**
+1. **Emergency fund critically low** — $8K for family of 5 (3 kids under 7)
+2. **No life insurance on Michael** — Sandra has only 1x salary through employer
+3. **Student loans:** $47K at 5.8% weighted average — Sandra hasn't enrolled in employer repayment benefit ($5K/year!)
+4. Michael's part-time real estate income ($30-40K/year) not being optimized
+5. No retirement plan for Michael — self-employed income is unsheltered
+
+**Quick Wins for Today:**
+- Enroll Sandra in employer student loan repayment benefit → $5K/year free money
+- Get term life quotes for Michael (at least $500K, ideally $1M)
+- Set emergency fund target: $25K (3 months expenses)
+
+Want me to pull up the insurance quotes, the student loan analysis, or the meeting prep?`,
+
+  'spencer': `Here's a quick snapshot for **Harriet & William Spencer**:
+
+**Key Facts:** Ages 71/73 · Conservative risk · Client since 2016
+**Total Assets:** $6.8M · **YTD Return:** +5.2%
+
+**Key Themes:**
+- Well-positioned conservative allocation with ample income
+- QCD strategy effectively reducing RMD tax impact
+- Granddaughter's wedding in June — may need gift planning discussion
+- Harriet just referred new prospect Rose Chen
+- Active in community: Rotary Club, watercolor classes with Eleanor Vance
+- Winter in Scottsdale — 4 grandchildren (ages 8-22) for legacy planning
+
+**Portfolio:** Trust account, joint brokerage, traditional IRAs. Heavy bond allocation (BND, VCIT, VGSH) with growth via VTI and VIG. $320K cash reserve.
+
+Want me to pull up their holdings, the QCD strategy, or the gift planning options for the wedding?`,
 };
 
 const QUICK_ACTIONS = [
@@ -199,13 +508,31 @@ export default function ChatInterface() {
     setInput('');
     setIsTyping(true);
 
+    const lowerText = text.toLowerCase();
     const matchKey = Object.keys(SCRIPTED_RESPONSES).find(
-      (key) => text.toLowerCase().includes(key.toLowerCase())
+      (key) => lowerText.includes(key.toLowerCase())
     );
     const responseText =
       matchKey
         ? SCRIPTED_RESPONSES[matchKey]
-        : `I'd be happy to help with that. Let me look into "${text}" for you.\n\nBased on your client data and recent activity, I can provide insights on this topic. Could you give me a bit more context about which client or portfolio you're referring to? That will help me give you the most relevant information.`;
+        : `Here's what I found related to your query:
+
+**"${text}"**
+
+I've scanned your client data, meeting history, and recent activity. This appears to touch on a topic that spans multiple clients or requires specific parameters to analyze properly.
+
+**Here's what I can do right now:**
+- Pull up any specific client's portfolio, risk profile, or recent activity
+- Run comparisons across clients (returns, allocations, risk scores)
+- Draft communications or meeting prep materials
+- Model tax scenarios, retirement projections, or estate planning strategies
+
+**Try being more specific, for example:**
+- *"Show me all clients with YTD returns below 5%"*
+- *"What's the Nakamuras' concentrated stock position?"*
+- *"Draft a market update email to Margaret Kim"*
+
+The more specific your question, the more actionable my response will be.`;
 
     setTimeout(() => {
       const aiMessage: ChatMessageType = {

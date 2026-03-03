@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Client } from '../../lib/types';
 import { clients } from '../../data/clients';
+import { clientHoldings } from '../../data/holdings';
+import { clientDocuments } from '../../data/documents';
 import { useToast } from '../../hooks/useToast';
 
 function formatCurrency(value: number): string {
@@ -108,6 +110,7 @@ function ClientsContent() {
               <th className="py-3 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('nextReview')}>
                 Next Review{sortIndicator('nextReview')}
               </th>
+              <th className="py-3 pr-4">Flags</th>
               <th className="py-3">Tags</th>
             </tr>
           </thead>
@@ -127,6 +130,23 @@ function ClientsContent() {
                 </td>
                 <td className="py-3 pr-4 text-ink-muted whitespace-nowrap">
                   {new Date(client.nextReview + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                </td>
+                <td className="py-3 pr-4">
+                  <div className="flex gap-1 overflow-hidden">
+                    {client.flags?.map((flag) => (
+                      <span
+                        key={flag.id}
+                        title={flag.detail || flag.label}
+                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium whitespace-nowrap ${
+                          flag.severity === 'critical' ? 'bg-red-100 text-red-700' :
+                          flag.severity === 'warning' ? 'bg-amber-100 text-amber-700' :
+                          'bg-blue-100 text-blue-700'
+                        }`}
+                      >
+                        {flag.label}
+                      </span>
+                    ))}
+                  </div>
                 </td>
                 <td className="py-3">
                   <div className="flex gap-1 overflow-hidden">
@@ -180,7 +200,7 @@ function aggregateAllocation(client: Client): { equities: number; fixed: number;
   return { equities: Math.round(eq), fixed: Math.round(fi), alternatives: Math.round(alt), cash: Math.round(ca) };
 }
 
-type ModalTab = 'overview' | 'portfolio' | 'activity';
+type ModalTab = 'overview' | 'portfolio' | 'activity' | 'documents';
 
 type ScheduleStep = 'closed' | 'picking' | 'confirming' | 'confirmed';
 
@@ -211,6 +231,8 @@ function ClientDetailModal({ client, onClose, showToast }: { client: Client; onC
   const [emailBody, setEmailBody] = useState('');
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [checkedGoals, setCheckedGoals] = useState<Set<number>>(new Set());
+  const [showCallDialog, setShowCallDialog] = useState(false);
+  const [callState, setCallState] = useState<'dialing' | 'connected' | 'ended'>('dialing');
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -255,7 +277,17 @@ function ClientDetailModal({ client, onClose, showToast }: { client: Client; onC
   };
 
   const handleCall = () => {
-    showToast(`Calling ${client.name}...`);
+    setShowCallDialog(true);
+    setCallState('dialing');
+    setTimeout(() => setCallState('connected'), 2000);
+  };
+
+  const handleEndCall = () => {
+    setCallState('ended');
+    setTimeout(() => {
+      setShowCallDialog(false);
+      showToast('Call ended — 0:42');
+    }, 800);
   };
 
   const toggleGoal = (i: number) => {
@@ -277,6 +309,7 @@ function ClientDetailModal({ client, onClose, showToast }: { client: Client; onC
     { key: 'overview', label: 'Overview' },
     { key: 'portfolio', label: 'Portfolio' },
     { key: 'activity', label: 'Activity' },
+    { key: 'documents', label: 'Documents' },
   ];
 
   return (
@@ -337,6 +370,34 @@ function ClientDetailModal({ client, onClose, showToast }: { client: Client; onC
               <span>{client.riskProfile} risk</span>
             </div>
           </div>
+
+          {/* Flags */}
+          {client.flags && client.flags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-3">
+              {client.flags.map((flag) => (
+                <div
+                  key={flag.id}
+                  className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs ${
+                    flag.severity === 'critical' ? 'bg-red-50 text-red-700 border border-red-200' :
+                    flag.severity === 'warning' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                    'bg-blue-50 text-blue-700 border border-blue-200'
+                  }`}
+                >
+                  <svg className="h-3 w-3 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                    {flag.severity === 'critical' ? (
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                    ) : flag.severity === 'warning' ? (
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                    ) : (
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                    )}
+                  </svg>
+                  <span className="font-medium">{flag.label}</span>
+                  {flag.detail && <span className="text-[10px] opacity-75">— {flag.detail}</span>}
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Tabs */}
           <div className="flex gap-0.5 mt-3 -mb-4 border-b border-border">
@@ -491,6 +552,43 @@ function ClientDetailModal({ client, onClose, showToast }: { client: Client; onC
                 </div>
               </div>
 
+              {/* Holdings table */}
+              {clientHoldings[client.id] && (
+                <div>
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-ink-faint mb-3">Holdings</h3>
+                  <div className="rounded-lg border border-border overflow-hidden">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-border bg-surface-inset/50 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-faint">
+                          <th className="py-2 pl-3 pr-2">Ticker</th>
+                          <th className="py-2 pr-2">Name</th>
+                          <th className="py-2 pr-2 text-right">Shares</th>
+                          <th className="py-2 pr-2 text-right">Price</th>
+                          <th className="py-2 pr-2 text-right">Value</th>
+                          <th className="py-2 pr-2 text-right">Gain/Loss</th>
+                          <th className="py-2 pr-3">Account</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {clientHoldings[client.id].map((h, i) => (
+                          <tr key={i} className="border-b border-border-faint last:border-0">
+                            <td className="py-2 pl-3 pr-2 font-medium text-ink">{h.ticker}</td>
+                            <td className="py-2 pr-2 text-ink-muted max-w-[160px] truncate">{h.name}</td>
+                            <td className="py-2 pr-2 text-right text-ink-muted">{h.shares.toLocaleString()}</td>
+                            <td className="py-2 pr-2 text-right text-ink-muted">${h.price.toFixed(2)}</td>
+                            <td className="py-2 pr-2 text-right text-ink font-medium">${h.value.toLocaleString()}</td>
+                            <td className={`py-2 pr-2 text-right ${h.gain >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                              {h.gain >= 0 ? '+' : ''}{h.gainPct.toFixed(1)}%
+                            </td>
+                            <td className="py-2 pr-3 text-[11px] text-ink-faint">{h.accountType}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
               {/* Accounts detail with allocation bars */}
               <div>
                 <h3 className="text-xs font-medium uppercase tracking-wider text-ink-faint mb-3">Accounts</h3>
@@ -524,6 +622,61 @@ function ClientDetailModal({ client, onClose, showToast }: { client: Client; onC
                   })}
                 </div>
               </div>
+            </div>
+          )}
+
+          {tab === 'documents' && (
+            <div className="space-y-4">
+              <h3 className="text-xs font-medium uppercase tracking-wider text-ink-faint">Documents</h3>
+              {clientDocuments[client.id] ? (
+                <div className="rounded-lg border border-border overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-border bg-surface-inset/50 text-left text-[10px] font-semibold uppercase tracking-wider text-ink-faint">
+                        <th className="py-2 pl-3 pr-2">Name</th>
+                        <th className="py-2 pr-2">Type</th>
+                        <th className="py-2 pr-2">Uploaded</th>
+                        <th className="py-2 pr-3 text-right">Size</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {clientDocuments[client.id].map((doc) => (
+                        <tr key={doc.id} onClick={() => showToast(`Opening ${doc.name}...`)} className="border-b border-border-faint last:border-0 hover:bg-surface-inset/30 cursor-pointer transition-colors">
+                          <td className="py-2.5 pl-3 pr-2">
+                            <div className="flex items-center gap-2">
+                              <svg className="h-4 w-4 shrink-0 text-ink-faint" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                              </svg>
+                              <span className="font-medium text-ink">{doc.name}</span>
+                            </div>
+                          </td>
+                          <td className="py-2.5 pr-2">
+                            <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
+                              doc.type === 'tax-return' ? 'bg-blue-100 text-blue-700' :
+                              doc.type === 'estate-plan' ? 'bg-purple-100 text-purple-700' :
+                              doc.type === 'insurance' ? 'bg-green-100 text-green-700' :
+                              doc.type === 'statement' ? 'bg-amber-100 text-amber-700' :
+                              doc.type === 'agreement' ? 'bg-ink/10 text-ink-muted' :
+                              doc.type === 'form' ? 'bg-cyan-100 text-cyan-700' :
+                              'bg-gray-100 text-gray-500'
+                            }`}>
+                              {doc.type.replace('-', ' ')}
+                            </span>
+                          </td>
+                          <td className="py-2.5 pr-2 text-ink-muted">
+                            {new Date(doc.uploadedAt + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          </td>
+                          <td className="py-2.5 pr-3 text-right text-ink-faint">{doc.size}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="rounded-lg border border-border-faint px-8 py-12 text-center">
+                  <p className="text-sm text-ink-faint">No documents on file for this client.</p>
+                </div>
+              )}
             </div>
           )}
 
@@ -832,6 +985,55 @@ function ClientDetailModal({ client, onClose, showToast }: { client: Client; onC
                   )}
                 </div>
               )}
+            </div>
+          </div>
+        )}
+        {/* Call Dialog */}
+        {showCallDialog && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center bg-ink/50">
+            <div className="rounded-2xl border border-border bg-surface-raised p-8 text-center shadow-xl w-72 animate-fade-in">
+              <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full mb-4 ${
+                callState === 'dialing' ? 'bg-ink/10 animate-pulse' :
+                callState === 'connected' ? 'bg-emerald-100' :
+                'bg-red-100'
+              }`}>
+                <svg className={`h-7 w-7 ${
+                  callState === 'connected' ? 'text-emerald-600' : callState === 'ended' ? 'text-red-500' : 'text-ink'
+                }`} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                </svg>
+              </div>
+              <p className="text-lg font-semibold text-ink">{client.name}</p>
+              <p className="mt-1 text-sm text-ink-muted">
+                {callState === 'dialing' ? 'Dialing...' : callState === 'connected' ? 'Connected' : 'Call ended'}
+              </p>
+              {callState === 'dialing' && (
+                <p className="mt-1 text-xs text-ink-faint">Ringing</p>
+              )}
+              {callState === 'connected' && (
+                <p className="mt-1 text-xs text-emerald-600 font-medium">0:00</p>
+              )}
+              <div className="mt-6 flex justify-center gap-3">
+                {callState !== 'ended' && (
+                  <button
+                    onClick={handleEndCall}
+                    className="flex items-center gap-2 rounded-full bg-red-500 px-5 py-2 text-xs font-medium text-white hover:bg-red-600 transition-colors"
+                  >
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 3.75L18 6m0 0l2.25 2.25M18 6l2.25-2.25M18 6l-2.25 2.25m1.5 13.5c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 014.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.055.902-.417 1.173l-1.293.97a1.062 1.062 0 00-.38 1.21 12.035 12.035 0 007.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 011.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 01-2.25 2.25h-2.25z" />
+                    </svg>
+                    End Call
+                  </button>
+                )}
+                {callState === 'dialing' && (
+                  <button
+                    onClick={() => { setShowCallDialog(false); showToast('Call cancelled'); }}
+                    className="rounded-full border border-border px-4 py-2 text-xs text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         )}

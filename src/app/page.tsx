@@ -27,10 +27,10 @@ export default function Home() {
 
   const stats = [
     { value: String(todayMeetings.length), label: 'Meetings today', sub: 'Click below to prep', href: '#schedule', accent: 'border-l-accent-blue' },
-    { value: String(unreadEmails.length), label: 'Emails to review', sub: `${draftsReady} AI drafts ready`, href: '/follow-up', accent: 'border-l-accent-purple' },
-    { value: String(pendingOutreach.length), label: 'Outreach suggested', sub: `${urgentOutreach} urgent`, href: '/outreach', accent: 'border-l-accent-amber' },
-    { value: String(openTasks.length), label: 'Open tasks', sub: `${overdueTasks.length} overdue`, href: '#schedule', accent: 'border-l-accent-amber' },
-    { value: aumFormatted, label: 'Total AUM', sub: `${clients.length} households`, href: '/clients', accent: 'border-l-accent-green' },
+    { value: String(unreadEmails.length), label: 'Emails to review', sub: `${draftsReady} AI drafts ready`, href: '/follow-up', accent: 'border-l-accent-blue' },
+    { value: String(pendingOutreach.length), label: 'Outreach suggested', sub: `${urgentOutreach} urgent`, href: '/outreach', accent: 'border-l-accent-blue' },
+    { value: String(openTasks.length), label: 'Open tasks', sub: `${overdueTasks.length} overdue`, href: '#schedule', accent: 'border-l-accent-blue' },
+    { value: aumFormatted, label: 'Total AUM', sub: `${clients.length} households`, href: '/clients', accent: 'border-l-accent-blue' },
   ];
 
   return (

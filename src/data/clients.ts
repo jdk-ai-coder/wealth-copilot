@@ -1,4 +1,4 @@
-import { Client } from '../lib/types';
+import { Client, ClientFlag } from '../lib/types';
 
 export const clients: Client[] = [
   {
@@ -35,6 +35,10 @@ export const clients: Client[] = [
       'John began collecting Social Security at 65 — $3,420/month',
     ],
     notes: 'Grandson Benjamin (8) plays competitive soccer — travels for tournaments. Daughter Rachel lives in Portland. Planning Mediterranean cruise for 40th anniversary in September. Deborah volunteers at Denver Art Museum. John restoring a 1969 Mustang. Deborah considering part-time consulting which could affect Medicare premiums (IRMAA). Second grandchild Oliver born March 2026 — need to update estate plan and potentially open another 529.',
+    flags: [
+      { id: 'flag-001', label: 'Estate plan update needed', severity: 'warning', detail: 'New grandchild Oliver — beneficiary designations out of date' },
+      { id: 'flag-002', label: 'RMD deadline approaching', severity: 'info', detail: 'First RMD due by April 1, 2029 — Roth conversion window narrowing' },
+    ],
   },
   {
     id: 'client-002',
@@ -134,6 +138,10 @@ export const clients: Client[] = [
       'Practice revenue up 12% YoY — discussing expansion with partners',
     ],
     notes: 'Twin daughters (16) — looking at colleges next year (likely Brown, Stanford, Duke). Benjamin coaches their lacrosse team. Claire runs the Denver Youth Foundation. They just renovated their kitchen — $180K project. Practice has 3 partners — Benjamin owns 40%. Malpractice and umbrella insurance review overdue. 529 accounts need significant catch-up — twins are only 2 years from college.',
+    flags: [
+      { id: 'flag-003', label: 'Insurance review overdue', severity: 'critical', detail: 'Malpractice & umbrella policies not reviewed in 18+ months' },
+      { id: 'flag-004', label: '529 underfunded', severity: 'warning', detail: 'Twins start college in 2 years — significant gap to close' },
+    ],
   },
   {
     id: 'client-005',
@@ -167,6 +175,9 @@ export const clients: Client[] = [
       'Began researching ACA marketplace plans for Margaret\'s healthcare bridge',
     ],
     notes: 'Margaret runs half-marathons — completed Denver Marathon last fall. Robert coaches the debate team at his school. Son lives in Chicago (software engineer), daughter in med school at Emory. They love hiking in Rocky Mountain National Park — annual tradition. Considering downsizing from 4BR house once Margaret retires. Home currently valued at ~$850K with $180K mortgage remaining. Margaret\'s early retirement pushed plan probability down — need to discuss trade-offs.',
+    flags: [
+      { id: 'flag-005', label: 'Plan probability declined', severity: 'warning', detail: 'Dropped from 91% to 87% after early retirement modeling' },
+    ],
   },
   {
     id: 'client-006',
@@ -200,6 +211,10 @@ export const clients: Client[] = [
       'Started 10b5-1 plan discussion — compliance review in progress',
     ],
     notes: 'Three kids (12, 9, 6). David is into amateur astronomy — just bought a new telescope. Lisa does competitive ballroom dancing. They just got a golden retriever puppy named Pixel. David\'s startup valued at ~$2B (Series D) — IPO expected in 18 months. $2.1M concentrated in company stock is 39% of total assets. High burn rate lifestyle — $28K/month expenses. Lisa\'s practice buy-in loan at 5.2% — discuss accelerated payoff vs. investing spread.',
+    flags: [
+      { id: 'flag-006', label: 'Concentration risk', severity: 'critical', detail: '39% of assets in single company stock — exceeds 25% guideline' },
+      { id: 'flag-007', label: 'RSU vest Mar 15', severity: 'info', detail: '2,400 shares vesting — action needed before vest date' },
+    ],
   },
   {
     id: 'client-007',
@@ -232,6 +247,10 @@ export const clients: Client[] = [
       'Emergency fund at $12,000 — depleted by legal fees (was $45,000)',
     ],
     notes: 'Two kids (14, 11) — shared custody arrangement, alternating weeks. Just moved to a condo in LoDo (Lower Downtown Denver). Getting back into cycling — signed up for a century ride in June. Close to his sister Maria who lives nearby and helps with the kids. Legal fees consumed most of his emergency fund. Need to completely rebuild financial foundation: new budget, updated estate docs, beneficiary changes on everything, college planning reassessment with split household costs. Emotionally in a better place now but financially needs a full reset.',
+    flags: [
+      { id: 'flag-008', label: 'Emergency fund depleted', severity: 'critical', detail: 'Only $12K remaining — was $45K before legal fees' },
+      { id: 'flag-009', label: 'Beneficiary updates pending', severity: 'warning', detail: 'All accounts still list ex-spouse — needs immediate update' },
+    ],
   },
   {
     id: 'client-008',
@@ -299,6 +318,10 @@ export const clients: Client[] = [
       'Found additional Vanguard account and small Edward Jones account — consolidation needed',
     ],
     notes: 'Three adult children: Thomas (45, Denver), Margaret (42, Seattle), James (39, Austin). Eleanor is learning to manage finances for the first time — husband Harold handled everything. He was a successful contractor who passed 14 months ago. Takes a watercolor class with Harriet Spencer. Has a cat named Hemingway. Volunteers at the library twice a week. Emotional relationship with money — still grieving, anxious about spending. Assets scattered across 8 institutions: Schwab, Fidelity, Vanguard, Edward Jones, two local banks, and two credit unions. Stepped-up basis on most inherited assets is a significant planning opportunity.',
+    flags: [
+      { id: 'flag-010', label: 'Account consolidation in progress', severity: 'info', detail: '3 of 8 transfers completed — 5 remaining' },
+      { id: 'flag-011', label: 'Estate plan needs update', severity: 'warning', detail: 'Documents pre-date Harold\'s passing — POA and beneficiaries need revision' },
+    ],
   },
   {
     id: 'client-010',
@@ -333,6 +356,10 @@ export const clients: Client[] = [
       'Buy-sell agreement last updated 2022 — needs review given succession plan',
     ],
     notes: 'Owns 2 Chick-fil-A franchises (combined business value ~$3M). Tony is on the board of the local Boys & Girls Club. Angela runs a book club. Daughter Sofia just graduated from CU Boulder (working in marketing in Denver). Son Marco is a junior at CSU studying business — wants to take over one franchise eventually. Cash flow is seasonal — franchise fees, equipment upgrades, and staffing costs create quarterly swings. Second location doing well but lease renewal creates opportunity to discuss buying the commercial space. Tony considering whether to expand to a third location or focus on transition.',
+    flags: [
+      { id: 'flag-012', label: 'Lease renewal Aug 2026', severity: 'warning', detail: 'Location 2 lease expires — buy vs. renew decision needed' },
+      { id: 'flag-013', label: 'Buy-sell agreement stale', severity: 'info', detail: 'Last updated 2022 — needs revision for succession plan' },
+    ],
   },
   {
     id: 'client-011',

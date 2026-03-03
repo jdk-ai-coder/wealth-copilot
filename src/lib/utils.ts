@@ -67,14 +67,61 @@ export function getPriorityColor(priority: string): string {
   }
 }
 
+/** App-wide "now" for consistent mock dates */
+export const APP_NOW = new Date('2026-03-02T09:15:00');
+
 export function timeAgo(dateStr: string): string {
-  const now = new Date('2026-03-02T17:00:00');
+  const now = APP_NOW;
   const date = new Date(dateStr);
   const diffMs = now.getTime() - date.getTime();
+  if (diffMs < 0) return 'just now';
   const diffMins = Math.floor(diffMs / 60000);
+  if (diffMins < 1) return 'just now';
   if (diffMins < 60) return `${diffMins}m ago`;
   const diffHours = Math.floor(diffMins / 60);
   if (diffHours < 24) return `${diffHours}h ago`;
   const diffDays = Math.floor(diffHours / 24);
-  return `${diffDays}d ago`;
+  if (diffDays === 1) return '1 day ago';
+  if (diffDays < 7) return `${diffDays} days ago`;
+  const diffWeeks = Math.floor(diffDays / 7);
+  if (diffWeeks === 1) return '1 week ago';
+  return `${diffWeeks} weeks ago`;
+}
+
+export function formatEmailTime(dateStr: string): string {
+  const date = new Date(dateStr);
+  const now = APP_NOW;
+  const isToday = date.toDateString() === now.toDateString();
+  if (isToday) {
+    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  }
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (date.toDateString() === yesterday.toDateString()) {
+    return 'Yesterday';
+  }
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+export function formatMeetingDate(dateStr: string): string {
+  const date = new Date(dateStr + 'T00:00:00');
+  const now = APP_NOW;
+  const isToday = date.toDateString() === now.toDateString();
+  if (isToday) return 'Today';
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  if (date.toDateString() === tomorrow.toDateString()) return 'Tomorrow';
+  return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+export function formatDueDate(dateStr: string): string {
+  const date = new Date(dateStr + 'T00:00:00');
+  const now = APP_NOW;
+  const diffMs = date.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  if (diffDays < 0) return `${Math.abs(diffDays)}d overdue`;
+  if (diffDays === 0) return 'Due today';
+  if (diffDays === 1) return 'Due tomorrow';
+  if (diffDays <= 7) return `Due in ${diffDays}d`;
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }

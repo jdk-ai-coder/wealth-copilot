@@ -1,4 +1,4 @@
-import { Meeting } from '../lib/types';
+import { Meeting, PrepChecklistItem } from '../lib/types';
 
 export const meetings: Meeting[] = [
   // ── Today's meetings (2026-03-02) ────────────────────────────────────
@@ -17,6 +17,14 @@ export const meetings: Meeting[] = [
     tags: ['High net worth', 'Business owner'],
     attendees: ['Dr. Benjamin Stern', 'Claire Stern'],
     prepDocId: 'prep-001',
+    meetingLink: 'https://zoom.us/j/92847561023',
+    lastMeetingNotes: 'Discussed practice valuation timeline with Benjamin. Agreed to engage a third-party valuation firm in Q2. Claire raised concerns about 529 funding gap with twins starting college in 2 years. Reviewed malpractice policy — noted premiums increased 8% but coverage unchanged.',
+    prepChecklist: [
+      { id: 'check-001-1', label: 'Pull updated practice valuation comps', checked: false },
+      { id: 'check-001-2', label: 'Review defined benefit plan contribution limits for 2026', checked: false },
+      { id: 'check-001-3', label: 'Calculate 529 catch-up contribution scenarios', checked: false },
+      { id: 'check-001-4', label: 'Prepare insurance coverage comparison sheet', checked: false },
+    ],
     agendaItems: [
       { id: 'agenda-001-1', title: 'Practice Valuation & Transition Planning Update', duration: 10, completed: false },
       { id: 'agenda-001-2', title: 'Defined Benefit Plan Optimization for 2026', duration: 5, completed: false },
@@ -40,6 +48,14 @@ export const meetings: Meeting[] = [
     tags: ['High net worth', 'Tax planning focus'],
     attendees: ['Deborah Millman', 'John Millman'],
     prepDocId: 'prep-002',
+    meetingLink: 'https://zoom.us/j/83726450198',
+    lastMeetingNotes: 'Completed $85K Roth conversion in January. Discussed timing of next conversion tranche. John started Social Security — $3,420/month. Deborah considering part-time consulting which could affect IRMAA brackets. New grandchild Oliver born — need estate plan updates.',
+    prepChecklist: [
+      { id: 'check-002-1', label: 'Run Roth conversion ladder model for 2026-2028', checked: false },
+      { id: 'check-002-2', label: 'Draft estate plan update memo for attorney', checked: false },
+      { id: 'check-002-3', label: 'Model IRMAA impact of Deborah consulting income', checked: false },
+      { id: 'check-002-4', label: 'Prepare DAF contribution timing analysis', checked: false },
+    ],
     agendaItems: [
       { id: 'agenda-002-1', title: 'Roth Conversion Ladder Analysis (2026-2028)', duration: 10, completed: false },
       { id: 'agenda-002-2', title: 'Estate Plan Update — New Grandchild Oliver', duration: 8, completed: false },
@@ -61,6 +77,14 @@ export const meetings: Meeting[] = [
     tags: ['Pre-retiree', 'Early retirement'],
     attendees: ['Margaret Kim', 'Robert Kim'],
     prepDocId: 'prep-003',
+    meetingLink: 'https://zoom.us/j/74629381057',
+    lastMeetingNotes: 'Margaret confirmed early retirement target — 18 months. Plan probability at 87%. Began researching ACA marketplace plans. Robert will work until 63 for full pension vesting. Home value ~$850K with $180K mortgage.',
+    prepChecklist: [
+      { id: 'check-003-1', label: 'Print ACA marketplace plan comparison', checked: false },
+      { id: 'check-003-2', label: 'Run updated Monte Carlo with early retirement date', checked: false },
+      { id: 'check-003-3', label: 'Pull Social Security benefit estimates for both', checked: false },
+      { id: 'check-003-4', label: 'Research home sale tax exclusion rules', checked: false },
+    ],
     agendaItems: [
       { id: 'agenda-003-1', title: 'Healthcare Bridge Strategy (Age 58-65)', duration: 10, completed: false },
       { id: 'agenda-003-2', title: 'Robert\'s Pension Analysis & Options', duration: 8, completed: false },
@@ -82,6 +106,14 @@ export const meetings: Meeting[] = [
     tags: ['Recently divorced', 'Life transition'],
     attendees: ['Frank Delgado'],
     prepDocId: 'prep-004',
+    meetingLink: 'https://zoom.us/j/65918273046',
+    lastMeetingNotes: 'Initial post-divorce planning session. Frank received settlement assets in February. QDRO paperwork filed for ex-wife\'s $210K share. Emergency fund depleted to $12K from legal fees. Need complete financial reset: budget, estate docs, beneficiary changes, college planning.',
+    prepChecklist: [
+      { id: 'check-004-1', label: 'Prepare post-divorce budget template', checked: false },
+      { id: 'check-004-2', label: 'List all accounts needing beneficiary updates', checked: false },
+      { id: 'check-004-3', label: 'Check QDRO processing status with plan admin', checked: false },
+      { id: 'check-004-4', label: 'Run college funding gap analysis for 2 kids', checked: false },
+    ],
     agendaItems: [
       { id: 'agenda-004-1', title: 'Post-Divorce Budget & Cash Flow Review', duration: 8, completed: false },
       { id: 'agenda-004-2', title: 'Estate Documents & Beneficiary Updates', duration: 8, completed: false },
@@ -103,6 +135,14 @@ export const meetings: Meeting[] = [
     tags: ['Workplace conversion', 'New client'],
     attendees: ['Sandra Torres', 'Michael Torres'],
     prepDocId: 'prep-005',
+    meetingLink: 'https://zoom.us/j/56837192048',
+    lastMeetingNotes: 'First meeting — onboarding from Edelman workplace seminar. Sandra and Michael have $47K in student loans, only $8K emergency fund, and no life insurance for Michael. Strong income potential but need foundational planning. Sandra has employer student loan repayment benefit she hasn\'t enrolled in.',
+    prepChecklist: [
+      { id: 'check-005-1', label: 'Prepare goals-based planning questionnaire', checked: false },
+      { id: 'check-005-2', label: 'Research term life quotes for Michael', checked: false },
+      { id: 'check-005-3', label: 'Model student loan payoff vs. investing scenarios', checked: false },
+      { id: 'check-005-4', label: 'Review Sandra employer benefits package', checked: false },
+    ],
     agendaItems: [
       { id: 'agenda-005-1', title: 'Financial Goals & Priorities Discussion', duration: 8, completed: false },
       { id: 'agenda-005-2', title: 'Emergency Fund & Debt Payoff Strategy', duration: 8, completed: false },

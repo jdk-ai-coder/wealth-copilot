@@ -24,6 +24,7 @@ export interface Client {
   accounts: Account[];
   recentActivity: string[];
   notes: string;
+  flags?: ClientFlag[];
 }
 
 export interface Account {
@@ -49,6 +50,9 @@ export interface Meeting {
   prepDocId?: string;
   agendaItems?: AgendaItem[];
   tasks?: Task[];
+  meetingLink?: string;
+  lastMeetingNotes?: string;
+  prepChecklist?: PrepChecklistItem[];
 }
 
 export interface MeetingSummary {
@@ -92,6 +96,7 @@ export interface Email {
   draftReply?: DraftReply;
   type: 'inbound' | 'follow-up';
   meetingId?: string;
+  thread?: ThreadMessage[];
 }
 
 export interface DraftReply {
@@ -190,3 +195,49 @@ export interface OutreachSuggestion {
 export type FeedItem =
   | { type: 'meeting'; data: Meeting }
   | { type: 'email'; data: Email };
+
+// ── Feature 2: Email Threads ──────────────────────────────────────
+export interface ThreadMessage {
+  id: string;
+  from: string;
+  date: string;
+  body: string;
+}
+
+// ── Feature 3: Portfolio Holdings ─────────────────────────────────
+export interface Holding {
+  ticker: string;
+  name: string;
+  shares: number;
+  price: number;
+  value: number;
+  costBasis: number;
+  gain: number;
+  gainPct: number;
+  accountType: string;
+}
+
+// ── Feature 4: Meeting Enhancements ───────────────────────────────
+export interface PrepChecklistItem {
+  id: string;
+  label: string;
+  checked: boolean;
+}
+
+// ── Feature 5: Document Vault ─────────────────────────────────────
+export interface ClientDocument {
+  id: string;
+  clientId: string;
+  name: string;
+  type: 'tax-return' | 'estate-plan' | 'insurance' | 'statement' | 'agreement' | 'form' | 'other';
+  uploadedAt: string;
+  size: string;
+}
+
+// ── Feature 6: Client Flags ──────────────────────────────────────
+export interface ClientFlag {
+  id: string;
+  label: string;
+  severity: 'critical' | 'warning' | 'info';
+  detail?: string;
+}

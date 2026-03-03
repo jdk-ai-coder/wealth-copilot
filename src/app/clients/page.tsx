@@ -4,9 +4,21 @@ import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Client } from '../../lib/types';
 import { clients } from '../../data/clients';
+import { meetings } from '../../data/meetings';
 import { clientHoldings } from '../../data/holdings';
 import { clientDocuments } from '../../data/documents';
 import { useToast } from '../../hooks/useToast';
+
+// Derive last contacted date from most recent completed meeting per client
+const lastContactedMap: Record<string, string> = {};
+for (const m of meetings) {
+  if (m.status === 'completed') {
+    const existing = lastContactedMap[m.clientId];
+    if (!existing || m.date > existing) {
+      lastContactedMap[m.clientId] = m.date;
+    }
+  }
+}
 
 function formatCurrency(value: number): string {
   if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
@@ -34,7 +46,7 @@ function ClientsContent() {
     return null;
   });
   const [search, setSearch] = useState('');
-  const [sortKey, setSortKey] = useState<'name' | 'totalAssets' | 'ytdReturn' | 'nextReview'>('name');
+  const [sortKey, setSortKey] = useState<'name' | 'totalAssets' | 'ytdReturn' | 'nextReview' | 'lastContacted'>('name');
   const [sortAsc, setSortAsc] = useState(true);
 
   const filtered = clients
@@ -50,6 +62,7 @@ function ClientsContent() {
         case 'totalAssets': cmp = a.totalAssets - b.totalAssets; break;
         case 'ytdReturn': cmp = a.ytdReturn - b.ytdReturn; break;
         case 'nextReview': cmp = a.nextReview.localeCompare(b.nextReview); break;
+        case 'lastContacted': cmp = (lastContactedMap[a.id] || '').localeCompare(lastContactedMap[b.id] || ''); break;
       }
       return sortAsc ? cmp : -cmp;
     });
@@ -107,6 +120,9 @@ function ClientsContent() {
               <th className="py-3 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('nextReview')}>
                 Next Review{sortIndicator('nextReview')}
               </th>
+              <th className="py-3 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('lastContacted')}>
+                Last Contacted{sortIndicator('lastContacted')}
+              </th>
               <th className="py-3">Flags</th>
             </tr>
           </thead>
@@ -123,6 +139,11 @@ function ClientsContent() {
                 <td className="py-3 pr-4 text-ink whitespace-nowrap">{formatCurrency(client.totalAssets)}</td>
                 <td className="py-3 pr-4 text-ink-muted whitespace-nowrap">
                   {new Date(client.nextReview + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                </td>
+                <td className="py-3 pr-4 text-ink-muted whitespace-nowrap">
+                  {lastContactedMap[client.id]
+                    ? new Date(lastContactedMap[client.id] + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                    : '\u2014'}
                 </td>
                 <td className="py-3">
                   <div className="flex gap-1 overflow-hidden">

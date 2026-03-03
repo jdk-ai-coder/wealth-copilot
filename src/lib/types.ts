@@ -283,4 +283,10 @@ export interface Lead {
   lastContactedAt?: string;
   aiOutreach: LeadAiOutreach;
   notes?: string;
+  phone?: string;
+  email?: string;
+  linkedIn?: string;
+  planType?: string;
+  contributionRate?: number;
+  employerMatch?: string;
 }

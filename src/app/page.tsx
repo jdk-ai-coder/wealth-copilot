@@ -88,7 +88,7 @@ export default function Home() {
             <p className="mt-1 text-sm text-ink-faint">{todayMeetings.length} meetings scheduled &mdash; click to prep or review</p>
           </div>
         </div>
-        <div className="mt-4 grid grid-cols-3 gap-4">
+        <div className="mt-4 grid grid-cols-3 auto-rows-fr gap-4">
           {todayMeetings.map((meeting) => {
             const isLive = meeting.status === 'in-progress';
             const isCompleted = meeting.status === 'completed';
@@ -99,7 +99,7 @@ export default function Home() {
               <Link
                 key={meeting.id}
                 href={href}
-                className={`group relative rounded-lg border bg-surface-raised px-5 py-4 transition-all hover:shadow-md hover:-translate-y-0.5 ${
+                className={`group relative flex flex-col rounded-lg border bg-surface-raised px-5 py-4 transition-all hover:shadow-md hover:-translate-y-0.5 ${
                   isLive ? 'border-accent-green shadow-sm' : 'border-border hover:border-ink/20'
                 }`}
               >
@@ -126,7 +126,7 @@ export default function Home() {
                 <p className="mt-2 text-[11px] text-ink-faint">{meeting.duration} min</p>
 
                 {/* Action button */}
-                <div className={`mt-3 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                <div className={`mt-auto pt-3 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                   isLive
                     ? 'bg-accent-green-light text-accent-green'
                     : isCompleted

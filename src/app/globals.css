@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-surface: #F9FAFB;
-  --color-surface-raised: #ffffff;
-  --color-surface-inset: #F3F4F6;
-  --color-ink: #111827;
-  --color-ink-muted: #6B7280;
-  --color-ink-faint: #9CA3AF;
-  --color-border: #E5E7EB;
-  --color-border-faint: #F3F4F6;
+  --color-surface: #f7f8f3;
+  --color-surface-raised: #fefffe;
+  --color-surface-inset: #eef0e8;
+  --color-ink: #1c1f17;
+  --color-ink-muted: #5e6356;
+  --color-ink-faint: #959a8c;
+  --color-border: #dde0d6;
+  --color-border-faint: #eceee6;
 
-  /* Accent palette — vibrant, modern */
-  --color-accent-blue: #3B82F6;
-  --color-accent-blue-light: #EFF6FF;
-  --color-accent-green: #10B981;
-  --color-accent-green-light: #ECFDF5;
-  --color-accent-amber: #F59E0B;
-  --color-accent-amber-light: #FFFBEB;
-  --color-accent-purple: #8B5CF6;
-  --color-accent-purple-light: #F5F3FF;
-  --color-accent-red: #EF4444;
-  --color-accent-red-light: #FEF2F2;
+  /* Accent palette — warm-balanced */
+  --color-accent-blue: #4B7BE5;
+  --color-accent-blue-light: #edf2ec;
+  --color-accent-green: #3a9e6e;
+  --color-accent-green-light: #ebf5ee;
+  --color-accent-amber: #c48a08;
+  --color-accent-amber-light: #f8f3e6;
+  --color-accent-purple: #7c5ad4;
+  --color-accent-purple-light: #f0eef5;
+  --color-accent-red: #d94a4a;
+  --color-accent-red-light: #f8efed;
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }

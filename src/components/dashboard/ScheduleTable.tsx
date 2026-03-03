@@ -94,12 +94,12 @@ export default function ScheduleTable() {
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border bg-surface-inset/50 text-left text-[11px] font-semibold uppercase tracking-wider text-ink-faint">
-            <th className="py-2.5 pl-4 pr-6">Time</th>
-            <th className="py-2.5 pr-6">Type</th>
-            <th className="py-2.5 pr-6">Title</th>
-            <th className="py-2.5 pr-6">Client</th>
-            <th className="py-2.5 pr-6">Status</th>
-            <th className="py-2.5 pr-4"></th>
+            <th className="py-2 pl-4 pr-6">Time</th>
+            <th className="py-2 pr-6">Type</th>
+            <th className="py-2 pr-6">Title</th>
+            <th className="py-2 pr-6">Client</th>
+            <th className="py-2 pr-6">Status</th>
+            <th className="py-2 pr-4"></th>
           </tr>
         </thead>
         <tbody>
@@ -124,12 +124,12 @@ export default function ScheduleTable() {
                     i % 2 === 1 ? 'bg-surface-inset/20' : ''
                   }`}
                 >
-                  <td className="whitespace-nowrap py-3 pl-4 pr-6 text-ink-faint">{row.time}</td>
-                  <td className="py-3 pr-6">{typePill(row.type)}</td>
-                  <td className="max-w-xs truncate py-3 pr-6 font-medium text-ink">{row.title}</td>
-                  <td className="py-3 pr-6 text-ink-muted">{row.client}</td>
-                  <td className="py-3 pr-6">{statusBadge(row.status, row.priority)}</td>
-                  <td className="py-3 pr-4 text-right">
+                  <td className="whitespace-nowrap py-2 pl-4 pr-6 text-ink-faint">{row.time}</td>
+                  <td className="py-2 pr-6">{typePill(row.type)}</td>
+                  <td className="max-w-xs truncate py-2 pr-6 font-medium text-ink">{row.title}</td>
+                  <td className="py-2 pr-6 text-ink-muted">{row.client}</td>
+                  <td className="py-2 pr-6">{statusBadge(row.status, row.priority)}</td>
+                  <td className="py-2 pr-4 text-right">
                     <span className="text-xs font-medium text-accent-blue opacity-0 group-hover:opacity-100 transition-opacity">
                       {row.action} &rarr;
                     </span>
@@ -154,12 +154,12 @@ export default function ScheduleTable() {
                 i % 2 === 1 ? 'bg-surface-inset/30' : ''
               }`}
             >
-              <td className="whitespace-nowrap py-3 pl-4 pr-6 font-semibold text-ink">{row.time}</td>
-              <td className="py-3 pr-6">{typePill(row.type)}</td>
-              <td className="max-w-xs truncate py-3 pr-6 font-medium text-ink">{row.title}</td>
-              <td className="py-3 pr-6 text-ink-muted">{row.client}</td>
-              <td className="py-3 pr-6">{statusBadge(row.status)}</td>
-              <td className="py-3 pr-4 text-right">
+              <td className="whitespace-nowrap py-2 pl-4 pr-6 font-semibold text-ink">{row.time}</td>
+              <td className="py-2 pr-6">{typePill(row.type)}</td>
+              <td className="max-w-xs truncate py-2 pr-6 font-medium text-ink">{row.title}</td>
+              <td className="py-2 pr-6 text-ink-muted">{row.client}</td>
+              <td className="py-2 pr-6">{statusBadge(row.status)}</td>
+              <td className="py-2 pr-4 text-right">
                 <span className="text-xs font-medium text-accent-blue opacity-0 group-hover:opacity-100 transition-opacity">
                   {row.action} &rarr;
                 </span>

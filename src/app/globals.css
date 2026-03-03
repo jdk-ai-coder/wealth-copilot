@@ -2,7 +2,7 @@
 
 @theme inline {
   --color-surface: #f7f8f3;
-  --color-surface-raised: #fefffe;
+  --color-surface-raised: #f2f3ed;
   --color-surface-inset: #eef0e8;
   --color-ink: #1c1f17;
   --color-ink-muted: #5e6356;
@@ -23,6 +23,10 @@
   --color-accent-red-light: #f8efed;
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 body {

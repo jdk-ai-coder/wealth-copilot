@@ -515,14 +515,14 @@ export default function InboundPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-surface-inset/50 text-left text-[11px] font-semibold uppercase tracking-wider text-ink-faint">
-                  <th className="py-2.5 pl-4 pr-3">Name</th>
-                  <th className="py-2.5 pr-3">Employer</th>
-                  <th className="py-2.5 pr-3">401(k)</th>
-                  <th className="py-2.5 pr-3">Est. Wealth</th>
-                  <th className="py-2.5 pr-3">Score</th>
-                  <th className="py-2.5 pr-3">Status</th>
-                  <th className="py-2.5 pr-3">Triggers</th>
-                  <th className="py-2.5 pr-4 text-right">Actions</th>
+                  <th className="py-2 pl-4 pr-3">Name</th>
+                  <th className="py-2 pr-3">Employer</th>
+                  <th className="py-2 pr-3">401(k)</th>
+                  <th className="py-2 pr-3">Est. Wealth</th>
+                  <th className="py-2 pr-3">Score</th>
+                  <th className="py-2 pr-3">Status</th>
+                  <th className="py-2 pr-3">Triggers</th>
+                  <th className="py-2 pr-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -534,18 +534,18 @@ export default function InboundPage() {
                       onClick={() => router.push(`/inbound/${lead.id}`)}
                       className="border-b border-border-faint last:border-0 cursor-pointer transition-colors hover:bg-surface-inset/50"
                     >
-                      <td className="py-3 pl-4 pr-3">
+                      <td className="py-2 pl-4 pr-3">
                         <div>
                           <p className="font-medium text-ink whitespace-nowrap">{lead.name}</p>
                           <p className="text-[11px] text-ink-faint">{lead.jobTitle}</p>
                         </div>
                       </td>
-                      <td className="py-3 pr-3 text-ink-muted whitespace-nowrap">{lead.employer}</td>
-                      <td className="py-3 pr-3 text-ink whitespace-nowrap tabular-nums">{formatCurrency(lead.balance401k)}</td>
-                      <td className="py-3 pr-3 text-ink whitespace-nowrap tabular-nums">{formatCurrency(lead.estimatedTotalWealth)}</td>
-                      <td className="py-3 pr-3"><ScoreBar score={lead.conversionScore} /></td>
-                      <td className="py-3 pr-3"><StatusBadge status={lead.status} /></td>
-                      <td className="py-3 pr-3">
+                      <td className="py-2 pr-3 text-ink-muted whitespace-nowrap">{lead.employer}</td>
+                      <td className="py-2 pr-3 text-ink whitespace-nowrap tabular-nums">{formatCurrency(lead.balance401k)}</td>
+                      <td className="py-2 pr-3 text-ink whitespace-nowrap tabular-nums">{formatCurrency(lead.estimatedTotalWealth)}</td>
+                      <td className="py-2 pr-3"><ScoreBar score={lead.conversionScore} /></td>
+                      <td className="py-2 pr-3"><StatusBadge status={lead.status} /></td>
+                      <td className="py-2 pr-3">
                         <div className="flex gap-1 flex-wrap">
                           {lead.triggers.slice(0, 2).map(t => (
                             <span key={t.id} className="rounded-full bg-surface-inset px-1.5 py-0.5 text-[9px] font-medium text-ink-muted whitespace-nowrap">
@@ -559,7 +559,7 @@ export default function InboundPage() {
                           )}
                         </div>
                       </td>
-                      <td className="py-3 pr-4">
+                      <td className="py-2 pr-4">
                         <div className="flex items-center justify-end gap-1" onClick={e => e.stopPropagation()}>
                           {/* Draft email */}
                           <button
@@ -625,11 +625,11 @@ export default function InboundPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-surface-inset/50 text-left text-[11px] font-semibold uppercase tracking-wider text-ink-faint">
-                    <th className="py-2.5 pl-4 pr-6">Name</th>
-                    <th className="py-2.5 pr-6">Employer</th>
-                    <th className="py-2.5 pr-6">401(k) Balance</th>
-                    <th className="py-2.5 pr-6">Est. Wealth</th>
-                    <th className="py-2.5 pr-4">Score</th>
+                    <th className="py-2 pl-4 pr-6">Name</th>
+                    <th className="py-2 pr-6">Employer</th>
+                    <th className="py-2 pr-6">401(k) Balance</th>
+                    <th className="py-2 pr-6">Est. Wealth</th>
+                    <th className="py-2 pr-4">Score</th>
                   </tr>
                 </thead>
                 <tbody>

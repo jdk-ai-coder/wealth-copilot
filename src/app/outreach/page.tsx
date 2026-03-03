@@ -817,13 +817,13 @@ export default function OutreachPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-surface-inset/50 text-left text-[11px] font-semibold uppercase tracking-wider text-ink-faint">
-                  <th className="py-2.5 pl-3 pr-1 w-8"></th>
-                  <th className="py-2.5 pr-3">Client</th>
-                  <th className="py-2.5 pr-3">Priority</th>
-                  <th className="py-2.5 pr-3">Category</th>
-                  <th className="py-2.5 pr-3">Trigger</th>
-                  <th className="py-2.5 pr-3">Context</th>
-                  <th className="py-2.5 pr-4 text-right">Actions</th>
+                  <th className="py-2 pl-3 pr-1 w-8"></th>
+                  <th className="py-2 pr-3">Client</th>
+                  <th className="py-2 pr-3">Priority</th>
+                  <th className="py-2 pr-3">Category</th>
+                  <th className="py-2 pr-3">Trigger</th>
+                  <th className="py-2 pr-3">Context</th>
+                  <th className="py-2 pr-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -833,7 +833,7 @@ export default function OutreachPage() {
                     <Fragment key={item.id}>
                       <tr className="border-b border-border-faint last:border-0 transition-colors hover:bg-surface-inset/30">
                         {/* Expand chevron */}
-                        <td className="py-3 pl-3 pr-1">
+                        <td className="py-2 pl-3 pr-1">
                           <button onClick={() => toggleExpand(item.id)} className="text-ink-faint hover:text-ink transition-colors p-0.5">
                             <svg className={`h-3.5 w-3.5 transition-transform ${isExpanded ? 'rotate-90' : ''}`} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
@@ -842,7 +842,7 @@ export default function OutreachPage() {
                         </td>
 
                         {/* Client */}
-                        <td className="py-3 pr-3">
+                        <td className="py-2 pr-3">
                           <button
                             onClick={() => router.push(`/clients?highlight=${item.clientId}`)}
                             className="font-medium text-ink hover:text-accent-blue transition-colors text-left whitespace-nowrap"
@@ -853,22 +853,22 @@ export default function OutreachPage() {
                         </td>
 
                         {/* Priority */}
-                        <td className="py-3 pr-3">
+                        <td className="py-2 pr-3">
                           <PriorityBadge priority={item.priority} />
                         </td>
 
                         {/* Category */}
-                        <td className="py-3 pr-3">
+                        <td className="py-2 pr-3">
                           <CategoryBadge category={item.category} />
                         </td>
 
                         {/* Trigger */}
-                        <td className="py-3 pr-3 max-w-[240px]">
+                        <td className="py-2 pr-3 max-w-[240px]">
                           <p className="text-xs text-ink-muted truncate" title={item.trigger}>{item.trigger}</p>
                         </td>
 
                         {/* Context */}
-                        <td className="py-3 pr-3">
+                        <td className="py-2 pr-3">
                           <div className="space-y-0.5">
                             {item.context.slice(0, 2).map((c) => (
                               <p key={c.label} className="text-[11px] text-ink-faint whitespace-nowrap">
@@ -882,7 +882,7 @@ export default function OutreachPage() {
                         </td>
 
                         {/* Actions */}
-                        <td className="py-3 pr-4">
+                        <td className="py-2 pr-4">
                           <div className="flex items-center justify-end gap-1" onClick={e => e.stopPropagation()}>
                             {/* Draft Email */}
                             <button
@@ -1040,10 +1040,10 @@ export default function OutreachPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-surface-inset/50 text-left text-[11px] font-semibold uppercase tracking-wider text-ink-faint">
-                    <th className="py-2.5 pl-4 pr-6">Client</th>
-                    <th className="py-2.5 pr-6">Trigger</th>
-                    <th className="py-2.5 pr-6">Completed</th>
-                    <th className="py-2.5 pr-4">Method</th>
+                    <th className="py-2 pl-4 pr-6">Client</th>
+                    <th className="py-2 pr-6">Trigger</th>
+                    <th className="py-2 pr-6">Completed</th>
+                    <th className="py-2 pr-4">Method</th>
                   </tr>
                 </thead>
                 <tbody>

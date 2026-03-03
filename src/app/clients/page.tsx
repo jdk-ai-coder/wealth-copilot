@@ -109,21 +109,21 @@ function ClientsContent() {
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-surface">
             <tr className="border-b border-border text-left text-xs font-medium uppercase tracking-wider text-ink-faint">
-              <th className="py-3 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('name')}>
+              <th className="py-2 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('name')}>
                 Name{sortIndicator('name')}
               </th>
-              <th className="py-3 pr-4">Occupation</th>
-              <th className="py-3 pr-4">Risk</th>
-              <th className="py-3 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('totalAssets')}>
+              <th className="py-2 pr-4">Occupation</th>
+              <th className="py-2 pr-4">Risk</th>
+              <th className="py-2 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('totalAssets')}>
                 Assets{sortIndicator('totalAssets')}
               </th>
-              <th className="py-3 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('nextReview')}>
+              <th className="py-2 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('nextReview')}>
                 Next Review{sortIndicator('nextReview')}
               </th>
-              <th className="py-3 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('lastContacted')}>
+              <th className="py-2 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('lastContacted')}>
                 Last Contacted{sortIndicator('lastContacted')}
               </th>
-              <th className="py-3">Flags</th>
+              <th className="py-2">Flags</th>
             </tr>
           </thead>
           <tbody>
@@ -131,21 +131,21 @@ function ClientsContent() {
               <tr
                 key={client.id}
                 onClick={() => setSelectedClient(client)}
-                className="h-12 border-b border-border-faint cursor-pointer transition-colors hover:bg-surface-inset"
+                className="border-b border-border-faint cursor-pointer transition-colors hover:bg-surface-inset"
               >
-                <td className="py-3 pr-4 font-medium text-ink whitespace-nowrap">{client.name}</td>
-                <td className="py-3 pr-4 text-ink-muted max-w-[200px] truncate">{client.occupation}</td>
-                <td className="py-3 pr-4 text-ink-muted whitespace-nowrap">{client.riskProfile}</td>
-                <td className="py-3 pr-4 text-ink whitespace-nowrap">{formatCurrency(client.totalAssets)}</td>
-                <td className="py-3 pr-4 text-ink-muted whitespace-nowrap">
+                <td className="py-2 pr-4 font-medium text-ink whitespace-nowrap">{client.name}</td>
+                <td className="py-2 pr-4 text-ink-muted max-w-[200px] truncate">{client.occupation}</td>
+                <td className="py-2 pr-4 text-ink-muted whitespace-nowrap">{client.riskProfile}</td>
+                <td className="py-2 pr-4 text-ink whitespace-nowrap">{formatCurrency(client.totalAssets)}</td>
+                <td className="py-2 pr-4 text-ink-muted whitespace-nowrap">
                   {new Date(client.nextReview + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                 </td>
-                <td className="py-3 pr-4 text-ink-muted whitespace-nowrap">
+                <td className="py-2 pr-4 text-ink-muted whitespace-nowrap">
                   {lastContactedMap[client.id]
                     ? new Date(lastContactedMap[client.id] + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
                     : '\u2014'}
                 </td>
-                <td className="py-3">
+                <td className="py-2">
                   <div className="flex gap-1 overflow-hidden">
                     {client.flags?.map((flag) => (
                       <span
@@ -184,19 +184,28 @@ function parseAllocation(allocation: string): { equities: number; fixed: number;
   const fi = allocation.match(/(\d+)%\s*Fixed/i);
   const alt = allocation.match(/(\d+)%\s*Alt/i);
   const ca = allocation.match(/(\d+)%\s*Cash/i);
+  const single = allocation.match(/(\d+)%\s*Single\s*Stock/i);
+  const google = allocation.match(/(\d+)%\s*Google\s*Stock/i);
   return {
-    equities: eq ? parseInt(eq[1]) : 0,
+    equities: (eq ? parseInt(eq[1]) : 0) + (single ? parseInt(single[1]) : 0) + (google ? parseInt(google[1]) : 0),
     fixed: fi ? parseInt(fi[1]) : 0,
     alternatives: alt ? parseInt(alt[1]) : 0,
     cash: ca ? parseInt(ca[1]) : 0,
   };
 }
 
+function isParseable(allocation: string): boolean {
+  const alloc = parseAllocation(allocation);
+  return (alloc.equities + alloc.fixed + alloc.alternatives + alloc.cash) > 0;
+}
+
 function aggregateAllocation(client: Client): { equities: number; fixed: number; alternatives: number; cash: number } {
-  const totalValue = client.accounts.reduce((s, a) => s + a.value, 0);
+  // Only include accounts whose allocation string is parseable into percentages
+  const parseable = client.accounts.filter(a => isParseable(a.allocation));
+  const totalValue = parseable.reduce((s, a) => s + a.value, 0);
   if (totalValue === 0) return { equities: 0, fixed: 0, alternatives: 0, cash: 0 };
   let eq = 0, fi = 0, alt = 0, ca = 0;
-  for (const acct of client.accounts) {
+  for (const acct of parseable) {
     const alloc = parseAllocation(acct.allocation);
     const weight = acct.value / totalValue;
     eq += alloc.equities * weight;
@@ -204,7 +213,13 @@ function aggregateAllocation(client: Client): { equities: number; fixed: number;
     alt += alloc.alternatives * weight;
     ca += alloc.cash * weight;
   }
-  return { equities: Math.round(eq), fixed: Math.round(fi), alternatives: Math.round(alt), cash: Math.round(ca) };
+  // Round with largest-remainder method so total always equals 100
+  const raw = [eq, fi, alt, ca];
+  const floored = raw.map(Math.floor);
+  let remainder = 100 - floored.reduce((a, b) => a + b, 0);
+  const fracs = raw.map((v, i) => ({ i, frac: v - floored[i] })).sort((a, b) => b.frac - a.frac);
+  for (let j = 0; j < remainder; j++) floored[fracs[j].i]++;
+  return { equities: floored[0], fixed: floored[1], alternatives: floored[2], cash: floored[3] };
 }
 
 type ModalTab = 'overview' | 'portfolio' | 'activity' | 'documents';

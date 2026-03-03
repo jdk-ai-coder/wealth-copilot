@@ -26,11 +26,11 @@ export default function Home() {
   const urgentOutreach = pendingOutreach.filter((o) => o.priority === 'urgent').length;
 
   const stats = [
-    { value: String(todayMeetings.length), label: 'Meetings today', sub: 'Click below to prep', href: '#schedule', accent: 'border-l-accent-blue bg-accent-blue-light' },
-    { value: String(unreadEmails.length), label: 'Emails to review', sub: `${draftsReady} AI drafts ready`, href: '/follow-up', accent: 'border-l-accent-purple bg-accent-purple-light' },
-    { value: String(pendingOutreach.length), label: 'Outreach suggested', sub: `${urgentOutreach} urgent`, href: '/outreach', accent: 'border-l-orange-500 bg-orange-50' },
-    { value: String(openTasks.length), label: 'Open tasks', sub: `${overdueTasks.length} overdue`, href: '#schedule', accent: 'border-l-accent-amber bg-accent-amber-light' },
-    { value: aumFormatted, label: 'Total AUM', sub: `${clients.length} households`, href: '/clients', accent: 'border-l-accent-green bg-accent-green-light' },
+    { value: String(todayMeetings.length), label: 'Meetings today', sub: 'Click below to prep', href: '#schedule', accent: 'border-l-accent-blue' },
+    { value: String(unreadEmails.length), label: 'Emails to review', sub: `${draftsReady} AI drafts ready`, href: '/follow-up', accent: 'border-l-accent-purple' },
+    { value: String(pendingOutreach.length), label: 'Outreach suggested', sub: `${urgentOutreach} urgent`, href: '/outreach', accent: 'border-l-accent-amber' },
+    { value: String(openTasks.length), label: 'Open tasks', sub: `${overdueTasks.length} overdue`, href: '#schedule', accent: 'border-l-accent-amber' },
+    { value: aumFormatted, label: 'Total AUM', sub: `${clients.length} households`, href: '/clients', accent: 'border-l-accent-green' },
   ];
 
   return (
@@ -53,7 +53,7 @@ export default function Home() {
           <Link
             key={stat.label}
             href={stat.href}
-            className={`group rounded-lg border border-border border-l-[3px] px-4 py-4 shadow-sm transition-all hover:shadow-md hover:border-ink/20 ${stat.accent}`}
+            className={`group rounded-lg border border-border border-l-[3px] bg-surface-raised px-4 py-4 shadow-sm transition-all hover:shadow-md hover:border-ink/20 ${stat.accent}`}
           >
             <p className="text-2xl font-bold tracking-tight text-ink">{stat.value}</p>
             <p className="mt-0.5 text-xs font-medium text-ink-muted">{stat.label}</p>

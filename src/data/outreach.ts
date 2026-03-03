@@ -20,7 +20,7 @@ export const outreachSuggestions: OutreachSuggestion[] = [
     detectedAt: '2026-03-01T14:30:00Z',
     status: 'pending',
     draftSubject: 'Your NVIDIA Position — Let\'s Review Together',
-    draftBody: 'Hi David and Lisa,\n\nI hope you\'re both doing well. I wanted to reach out because I\'ve been monitoring your portfolio closely, and your NVIDIA position has grown to represent about 38% of your total portfolio — well above the 20% threshold we agreed upon in your investment policy.\n\nWhile NVIDIA\'s performance has been excellent, this level of concentration introduces meaningful downside risk. I\'d love to schedule a 30-minute call this week to walk through a few strategies we could consider, including a phased diversification approach that would be tax-efficient.\n\nWould Thursday or Friday afternoon work for a quick call?\n\nBest regards,\nSarah Mitchell, CFP®\nMeridian Wealth Partners',
+    draftBody: 'Hi David and Lisa,\n\nI hope you\'re both doing well. I wanted to reach out because I\'ve been monitoring your portfolio closely, and your NVIDIA position has grown to represent about 38% of your total portfolio — well above the 20% threshold we agreed upon in your investment policy.\n\nWhile NVIDIA\'s performance has been excellent, this level of concentration introduces meaningful downside risk. I\'d love to schedule a 30-minute call this week to walk through a few strategies we could consider, including a phased diversification approach that would be tax-efficient.\n\nWould Thursday or Friday afternoon work for a quick call?\n\nBest regards,\nSarah Mitchell, CFP®\nVantage Wealth Partners',
     draftTone: 'professional',
   },
   {

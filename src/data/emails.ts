@@ -38,7 +38,7 @@ I have time this Thursday at 2:30 PM or next Tuesday at 3:00 PM for an intro cal
 Looking forward to it!
 
 Best,
-Sarah Mitchell, CFP® | Meridian Wealth Partners`,
+Sarah Mitchell, CFP® | Vantage Wealth Partners`,
       tone: 'warm',
       status: 'draft',
     },
@@ -152,7 +152,7 @@ For the remaining 600 shares, I'd recommend holding them and folding them into t
 Want to hop on a quick call this week to finalize the strategy? I have time Thursday at 11 AM or Friday at 2 PM.
 
 Best,
-Sarah Mitchell, CFP® | Senior Financial Advisor | Meridian Wealth Partners`,
+Sarah Mitchell, CFP® | Senior Financial Advisor | Vantage Wealth Partners`,
       tone: 'professional',
       status: 'draft',
     },
@@ -204,7 +204,7 @@ Regarding the CFA franchise transfer update — that 6-month approval timeline i
 Let's plan to do a deep dive at our March 25th meeting. I'll have specific modeling done by then. In the meantime, I'd hold off on any major tax-motivated decisions until the final bill language is clearer.
 
 Best,
-Sarah Mitchell, CFP® | Senior Financial Advisor | Meridian Wealth Partners`,
+Sarah Mitchell, CFP® | Senior Financial Advisor | Vantage Wealth Partners`,
       tone: 'professional',
       status: 'draft',
     },
@@ -329,7 +329,7 @@ Let me address each of your questions:
 I'm targeting March 15th to have the draft comprehensive plan ready for your review. I'll send a calendar invite for a 60-minute meeting to walk through it.
 
 Best regards,
-Sarah Mitchell, CFP® | Senior Financial Advisor | Meridian Wealth Partners`,
+Sarah Mitchell, CFP® | Senior Financial Advisor | Vantage Wealth Partners`,
       tone: 'professional',
       status: 'draft',
     },
@@ -430,7 +430,7 @@ I love the momentum here — your energy on this is exactly what's needed to mak
 Looking forward to keeping this moving. You and Angela have built something really special with these franchises, and creating a path for Marco to carry it forward is smart family and business planning.
 
 Best,
-Sarah Mitchell, CFP® | Senior Financial Advisor | Meridian Wealth Partners`,
+Sarah Mitchell, CFP® | Senior Financial Advisor | Vantage Wealth Partners`,
       tone: 'professional',
       status: 'draft',
     },

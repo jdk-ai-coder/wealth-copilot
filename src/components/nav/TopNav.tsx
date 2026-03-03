@@ -24,7 +24,7 @@ export default function TopNav({ demoActive, onToggleDemo }: TopNavProps) {
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <span className="text-blue-600 text-lg leading-none">✦</span>
           <span className="text-lg font-semibold tracking-tight text-slate-900">
-            Meridian <span className="font-light text-slate-500">Copilot</span>
+            Vantage <span className="font-light text-slate-500">Copilot</span>
           </span>
         </Link>
 

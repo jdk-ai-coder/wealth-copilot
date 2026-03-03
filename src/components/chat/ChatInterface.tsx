@@ -1,8 +1,74 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { ChatMessage as ChatMessageType } from '../../lib/types';
 import ChatMessage from './ChatMessage';
+
+/* ── Thinking step types & pools ──────────────────────────────────── */
+type ThinkingStep = {
+  icon: string;
+  tool: string;
+  label: string;
+  status: 'pending' | 'active' | 'done';
+  result?: string;
+  detail?: string;
+};
+
+type StepTemplate = Omit<ThinkingStep, 'status'>;
+
+const TOOL_POOLS: { keywords: string[]; steps: StepTemplate[] }[] = [
+  {
+    keywords: ['millman', 'nakamura', 'kim', 'stern', 'gordon', 'delgado', 'torres', 'spencer', 'vance', 'russo', 'debbie', 'client'],
+    steps: [
+      { icon: '🔍', tool: 'CRM Sync', label: 'Searching client records', result: 'Found: Deborah Millman · 6 accounts · $4.2M AUM', detail: 'Query: SELECT * FROM clients WHERE name ILIKE \'%millman%\'\nMatched 1 household · 2 contacts · Last activity: 2h ago' },
+      { icon: '🏦', tool: 'Schwab API', label: 'Fetching account positions', result: 'Retrieved 6 accounts · 42 positions · Updated 3m ago', detail: 'Endpoints: /accounts/positions, /accounts/balances\nAccounts: Joint, 2×Trad IRA, 2×Roth IRA, 529\nLatency: 84ms' },
+      { icon: '⚙️', tool: 'Analysis Engine', label: 'Running financial analysis', result: 'Analysis complete · 4 insights generated', detail: 'Models: portfolio_drift_v3, tax_optimization_v2\nRisk score: 42/100 · Drift: +3.2% equity overweight\nExecution time: 210ms' },
+      { icon: '✍️', tool: 'Response', label: 'Composing response', result: 'Response ready', detail: 'Template: client_summary_v2\nSections: overview, priorities, action_items' },
+    ],
+  },
+  {
+    keywords: ['portfolio', 'fund', 'performance', 'holdings', 'allocation', 'aum', 'compare'],
+    steps: [
+      { icon: '🏦', tool: 'Schwab API', label: 'Pulling portfolio data', result: 'Loaded 10 households · 156 positions', detail: 'Endpoint: /accounts/positions/bulk\nTotal AUM: $51.6M · Avg positions/acct: 12\nLatency: 127ms' },
+      { icon: '📊', tool: 'Morningstar', label: 'Fetching benchmark data', result: 'YTD benchmarks loaded · S&P 500: +6.4%', detail: 'Data feed: morningstar_realtime_v4\nIndices: SPX, AGG, MSCI_EAFE, RUSSELL_2000\nAs of: market close yesterday' },
+      { icon: '⚠️', tool: 'Risk Engine', label: 'Calculating risk metrics', result: 'Risk analysis complete · 2 alerts', detail: 'Models: var_95, concentration_check, drift_monitor\nAlerts: Nakamura concentration (39%), Kim plan prob (87%)\nExecution time: 340ms' },
+      { icon: '✍️', tool: 'Response', label: 'Composing response', result: 'Response ready', detail: 'Template: portfolio_overview_v2\nClients ranked by YTD return' },
+    ],
+  },
+  {
+    keywords: ['tax', 'roth', 'harvesting', 'conversion', 'qdro', 'ira', 'deduction'],
+    steps: [
+      { icon: '📋', tool: 'Tax Lot Engine', label: 'Scanning tax lots', result: 'Analyzed 156 lots · $30.7K harvestable losses', detail: 'Engine: tax_lot_optimizer_v3\nLots scanned: 156 across 10 households\nHarvestable: $30,700 · Est. savings: $6,014' },
+      { icon: '📜', tool: 'IRS RegDB', label: 'Cross-referencing regulations', result: 'Verified: 2026 brackets, IRMAA thresholds, wash sale rules', detail: 'Database: irs_regulations_2026_q1\nRules checked: wash_sale_31d, irmaa_magi, roth_income_limits\nLast updated: Jan 15, 2026' },
+      { icon: '📈', tool: 'Projection Model', label: 'Running tax projections', result: 'Projected savings: $180K–$240K lifetime', detail: 'Model: roth_conversion_ladder_v2\nScenarios: 3 (no consulting, part-time, full)\nHorizon: 15 years · Discount rate: 4.2%' },
+      { icon: '✍️', tool: 'Response', label: 'Composing response', result: 'Response ready', detail: 'Template: tax_strategy_v2\nSections: opportunities, projections, action_items' },
+    ],
+  },
+  {
+    keywords: ['day', 'schedule', 'today', 'meeting', 'calendar', 'agenda', 'summarize'],
+    steps: [
+      { icon: '📅', tool: 'Calendar API', label: 'Loading today\'s schedule', result: '5 meetings found · 9:00 AM – 3:30 PM', detail: 'Source: Google Calendar (sarah@wealthco.com)\nDate: today · Meetings: 5 · Free slots: 12:00–2:00 PM\nLatency: 45ms' },
+      { icon: '🔍', tool: 'CRM Sync', label: 'Enriching with client data', result: 'Matched 5 clients · 38 open tasks', detail: 'Clients: Stern, Millman, Kim, Delgado, Torres\nTasks: 38 open · 5 overdue · 12 due this week\nEmail drafts ready: 5' },
+      { icon: '📧', tool: 'Email Scanner', label: 'Checking recent emails', result: '5 AI-drafted replies ready · 1 new referral', detail: 'Inbox: 23 unread · Client-related: 8\nDrafts pending review: 5\nNew prospect: Rose Chen (referral from Spencer)' },
+      { icon: '✍️', tool: 'Response', label: 'Composing response', result: 'Response ready', detail: 'Template: daily_briefing_v2\nSections: schedule, tasks, emails, referrals' },
+    ],
+  },
+];
+
+const FALLBACK_STEPS: StepTemplate[] = [
+  { icon: '📚', tool: 'Knowledge Base', label: 'Searching knowledge base', result: 'Found 12 relevant documents', detail: 'Index: wealth_advisory_kb_v3\nDocuments matched: 12 · Top relevance: 0.94\nCategories: planning, compliance, products' },
+  { icon: '🔍', tool: 'CRM Sync', label: 'Pulling client context', result: 'Context loaded · 10 households', detail: 'Active clients: 10 households\nRecent interactions: 24 in past 7 days\nLatency: 52ms' },
+  { icon: '⚙️', tool: 'Analysis Engine', label: 'Analyzing context', result: 'Analysis complete', detail: 'Models: intent_classifier_v2, context_ranker\nIntent confidence: 0.78\nExecution time: 180ms' },
+  { icon: '✍️', tool: 'Response', label: 'Composing response', result: 'Response ready', detail: 'Template: general_response_v1\nFallback: guided follow-up suggestions' },
+];
+
+function pickSteps(query: string): StepTemplate[] {
+  const lower = query.toLowerCase();
+  for (const pool of TOOL_POOLS) {
+    if (pool.keywords.some((kw) => lower.includes(kw))) return pool.steps;
+  }
+  return FALLBACK_STEPS;
+}
 
 /* ── Pre-scripted AI responses keyed by trigger phrase ──────────────── */
 const SCRIPTED_RESPONSES: Record<string, string> = {
@@ -486,18 +552,28 @@ function getTimestamp(): string {
   return now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 }
 
-export default function ChatInterface() {
+export default function ChatInterface({ onActiveTool }: { onActiveTool?: (tool: string | null) => void }) {
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [thinkingSteps, setThinkingSteps] = useState<ThinkingStep[]>([]);
+  const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set());
   const chatEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping]);
+  }, [messages, isTyping, thinkingSteps]);
 
-  const sendMessage = (text: string) => {
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      timeoutsRef.current.forEach(clearTimeout);
+    };
+  }, []);
+
+  const sendMessage = useCallback((text: string) => {
     const userMessage: ChatMessageType = {
       id: `msg-${Date.now()}`,
       role: 'user',
@@ -508,6 +584,7 @@ export default function ChatInterface() {
     setInput('');
     setIsTyping(true);
 
+    // Determine response text
     const lowerText = text.toLowerCase();
     const matchKey = Object.keys(SCRIPTED_RESPONSES).find(
       (key) => lowerText.includes(key.toLowerCase())
@@ -534,7 +611,47 @@ I've scanned your client data, meeting history, and recent activity. This appear
 
 The more specific your question, the more actionable my response will be.`;
 
-    setTimeout(() => {
+    // Build thinking steps
+    const stepTemplates = pickSteps(text);
+    const initialSteps: ThinkingStep[] = stepTemplates.map((t, i) => ({
+      ...t,
+      status: i === 0 ? 'active' : 'pending',
+    }));
+    setThinkingSteps(initialSteps);
+    setExpandedSteps(new Set());
+    onActiveTool?.(stepTemplates[0].tool);
+
+    // Animate steps one-by-one
+    const STEP_DELAY = 800;
+    const ids: ReturnType<typeof setTimeout>[] = [];
+
+    stepTemplates.forEach((_, i) => {
+      if (i === 0) return; // first step is already active
+      const id = setTimeout(() => {
+        setThinkingSteps((prev) =>
+          prev.map((s, j) => {
+            if (j === i - 1) return { ...s, status: 'done' };
+            if (j === i) return { ...s, status: 'active' };
+            return s;
+          })
+        );
+        onActiveTool?.(stepTemplates[i].tool);
+      }, STEP_DELAY * i);
+      ids.push(id);
+    });
+
+    // After all steps done, show the final response
+    const finalDelay = STEP_DELAY * stepTemplates.length;
+    const finalId = setTimeout(() => {
+      // Mark last step done
+      setThinkingSteps((prev) =>
+        prev.map((s, j) => (j === prev.length - 1 ? { ...s, status: 'done' } : s))
+      );
+      onActiveTool?.(null);
+    }, finalDelay - STEP_DELAY + 500);
+    ids.push(finalId);
+
+    const responseId = setTimeout(() => {
       const aiMessage: ChatMessageType = {
         id: `msg-${Date.now()}`,
         role: 'assistant',
@@ -542,9 +659,13 @@ The more specific your question, the more actionable my response will be.`;
         timestamp: getTimestamp(),
       };
       setMessages((prev) => [...prev, aiMessage]);
+      setThinkingSteps([]);
       setIsTyping(false);
-    }, 1200);
-  };
+    }, finalDelay + 300);
+    ids.push(responseId);
+
+    timeoutsRef.current = ids;
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -563,7 +684,7 @@ The more specific your question, the more actionable my response will be.`;
       <div className="flex-1 overflow-y-auto">
         {showWelcome ? (
           <div className="flex min-h-full flex-col items-center justify-center px-8 py-10">
-            <div className="w-full max-w-2xl">
+            <div className="w-full max-w-5xl">
               <div className="flex items-center gap-3 mb-2">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink text-white">
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -578,8 +699,8 @@ The more specific your question, the more actionable my response will be.`;
                 I can access all your client data, meeting history, portfolios, and financial plans.
               </p>
 
-              {/* Quick action grid — 2 cols, bigger cards */}
-              <div className="grid grid-cols-2 gap-3 mb-8">
+              {/* Quick action grid — 3 cols */}
+              <div className="grid grid-cols-3 gap-3 mb-8">
                 {QUICK_ACTIONS.map((action) => (
                   <button
                     key={action.label}
@@ -622,20 +743,68 @@ The more specific your question, the more actionable my response will be.`;
             </div>
           </div>
         ) : (
-          <div className="mx-auto max-w-3xl space-y-6 px-6 py-8">
+          <div className="mx-auto max-w-5xl space-y-6 px-6 py-8">
             {messages.map((msg) => (
               <ChatMessage key={msg.id} message={msg} />
             ))}
-            {isTyping && (
+            {thinkingSteps.length > 0 && (
               <div className="flex gap-3">
                 <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border text-xs text-ink-muted">
                   M
                 </div>
-                <div className="rounded-lg border border-border-faint px-4 py-3">
-                  <div className="flex items-center gap-1.5">
-                    <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-faint [animation-delay:0ms]" />
-                    <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-faint [animation-delay:150ms]" />
-                    <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-faint [animation-delay:300ms]" />
+                <div className="rounded-lg border border-border-faint border-l-2 border-l-blue-400 px-4 py-3 min-w-[340px]">
+                  <div className="space-y-1.5">
+                    {thinkingSteps.map((step, i) => (
+                      <div
+                        key={i}
+                        className={`transition-opacity duration-300 ${
+                          step.status === 'pending' ? 'opacity-0' : 'opacity-100'
+                        }`}
+                      >
+                        <div
+                          className={`flex items-center gap-2.5 text-sm ${step.status === 'done' ? 'cursor-pointer' : ''}`}
+                          onClick={() => {
+                            if (step.status !== 'done' || !step.detail) return;
+                            setExpandedSteps((prev) => {
+                              const next = new Set(prev);
+                              if (next.has(i)) next.delete(i); else next.add(i);
+                              return next;
+                            });
+                          }}
+                        >
+                          <span className="shrink-0 text-sm">{step.icon}</span>
+                          <span className="shrink-0 rounded px-1.5 py-0.5 text-xs font-medium bg-blue-50 text-blue-700">
+                            {step.tool}
+                          </span>
+                          <span className={step.status === 'done' ? 'text-ink-muted' : 'text-ink'}>
+                            {step.label}
+                          </span>
+                          <span className="ml-auto shrink-0">
+                            {step.status === 'active' && (
+                              <svg className="h-4 w-4 animate-spin text-ink-muted" viewBox="0 0 24 24" fill="none">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                              </svg>
+                            )}
+                            {step.status === 'done' && (
+                              <svg className="h-4 w-4 text-emerald-500" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </span>
+                        </div>
+                        {step.status === 'done' && step.result && (
+                          <p className="ml-14 text-xs text-ink-faint mt-0.5">
+                            {step.result}
+                          </p>
+                        )}
+                        {step.status === 'done' && expandedSteps.has(i) && step.detail && (
+                          <pre className="ml-14 mt-1 rounded bg-surface-inset px-3 py-2 text-xs text-ink-muted font-mono whitespace-pre-wrap">
+                            {step.detail}
+                          </pre>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -646,7 +815,7 @@ The more specific your question, the more actionable my response will be.`;
       </div>
 
       <div className="border-t border-border px-6 py-4">
-        <form onSubmit={handleSubmit} className="mx-auto flex max-w-2xl items-center gap-3 rounded-xl border border-border bg-surface-raised px-4 py-2.5 focus-within:border-ink/30 transition-colors">
+        <form onSubmit={handleSubmit} className="mx-auto flex max-w-5xl items-center gap-3 rounded-xl border border-border bg-surface-raised px-4 py-2.5 focus-within:border-ink/30 transition-colors">
           <input
             ref={inputRef}
             type="text"
@@ -666,7 +835,7 @@ The more specific your question, the more actionable my response will be.`;
             </svg>
           </button>
         </form>
-        <p className="mx-auto mt-2 max-w-2xl text-center text-[11px] text-ink-faint">
+        <p className="mx-auto mt-2 max-w-5xl text-center text-[11px] text-ink-faint">
           AI-generated insights — always verify before acting on recommendations.
         </p>
       </div>

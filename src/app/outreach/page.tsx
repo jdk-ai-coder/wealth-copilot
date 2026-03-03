@@ -176,7 +176,7 @@ export default function OutreachPage() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className={`rounded-lg border border-border border-l-[3px] px-4 py-4 shadow-sm ${stat.accent}`}
+            className={`rounded-lg border border-border border-l-[3px] px-4 py-4 ${stat.accent}`}
           >
             <p className="text-2xl font-bold tracking-tight text-ink">{stat.value}</p>
             <p className="mt-0.5 text-xs font-medium text-ink-muted">{stat.label}</p>
@@ -210,7 +210,7 @@ export default function OutreachPage() {
           </div>
         ) : (
           pendingItems.map((item) => (
-            <div key={item.id} id={`outreach-${item.id}`} className="rounded-lg border border-border bg-surface-raised shadow-sm overflow-hidden">
+            <div key={item.id} id={`outreach-${item.id}`} className="rounded-lg border border-border bg-surface-raised overflow-hidden">
               <div className="px-5 py-4">
                 {/* Top row: badges + timestamp */}
                 <div className="flex items-center justify-between">

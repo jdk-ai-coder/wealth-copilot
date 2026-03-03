@@ -41,7 +41,7 @@ export const outreachSuggestions: OutreachSuggestion[] = [
     detectedAt: '2026-03-01T09:00:00Z',
     status: 'pending',
     draftSubject: 'Planning Your 2026 RMD — Let\'s Get Ahead of It',
-    draftBody: 'Dear Eleanor,\n\nI hope this note finds you well. I wanted to get in touch early this year about your Required Minimum Distribution. Based on your current IRA balance, your estimated RMD for 2026 is approximately $142,000.\n\nI know you\'ve been interested in maximizing your charitable giving through Qualified Charitable Distributions. If we plan now, we can coordinate the timing to minimize your tax burden while supporting the causes you care about.\n\nWould you be available for a call this week to discuss our approach?\n\nWarm regards,\nSarah Mitchell, CFP®\nMeridian Wealth Partners',
+    draftBody: 'Hi Eleanor,\n\nI wanted to get ahead of your 2026 RMD — based on your current IRA balance, we\'re looking at approximately $142,000 this year.\n\nSince you\'ve been interested in QCDs for your charitable giving, now\'s a great time to plan the timing so we can minimize your tax hit while supporting the causes you care about.\n\nDo you have time for a quick call this week?\n\nBest,\nSarah',
     draftTone: 'warm',
   },
   {
@@ -62,7 +62,7 @@ export const outreachSuggestions: OutreachSuggestion[] = [
     detectedAt: '2026-02-28T11:00:00Z',
     status: 'pending',
     draftSubject: 'Countdown to Retirement — Let\'s Finalize Your Plan',
-    draftBody: 'Dear Margaret and Robert,\n\nWith Robert\'s retirement just 8 weeks away, I wanted to make sure we have all the pieces in place. There are a few important decisions we should finalize soon:\n\n1. Pension election form (due 30 days before retirement)\n2. Health insurance transition plan\n3. Income bridge strategy for the gap before Social Security\n\nCould we schedule a 60-minute meeting in the next week or two? I\'d suggest bringing any pension paperwork from the school district so we can review the options together.\n\nLooking forward to helping make this transition as smooth as possible.\n\nBest,\nSarah Mitchell, CFP®\nMeridian Wealth Partners',
+    draftBody: 'Hi Margaret and Robert,\n\nWith retirement just 8 weeks out, I want to make sure we\'re on top of a few things:\n\n1. Pension election form (due 30 days before retirement)\n2. Health insurance transition\n3. Income bridge plan for the gap before Social Security\n\nCan we find an hour in the next week or two to sit down and work through these? Bring any pension paperwork from the school district if you have it.\n\nLooking forward to it.\n\nBest,\nSarah',
     draftTone: 'warm',
   },
 
@@ -103,7 +103,7 @@ export const outreachSuggestions: OutreachSuggestion[] = [
     detectedAt: '2026-03-02T08:00:00Z',
     status: 'pending',
     draftSubject: 'Checking In — Thinking of You Both',
-    draftBody: 'Dear Harriet and William,\n\nI hope you\'re both enjoying the start of spring. I realized it\'s been a little while since we last connected, and I wanted to check in.\n\nYour portfolio has been performing well — your YTD return is tracking at 4.2%, and I\'ve been keeping an eye on a few opportunities in the municipal bond space that align nicely with your income goals.\n\nYour annual review is coming up on April 15th. In the meantime, if anything has come up that you\'d like to discuss, I\'m always just a phone call away.\n\nWarmly,\nSarah Mitchell, CFP®\nMeridian Wealth Partners',
+    draftBody: 'Hi Harriet and William,\n\nIt\'s been a while since we last caught up — wanted to check in and let you know your portfolio is looking strong. YTD return is at 4.2%, and I\'ve been watching some muni bond opportunities that could work well for your income goals.\n\nYour annual review is April 15th, but don\'t hesitate to call if anything comes up before then.\n\nHope you\'re both well!\n\nSarah',
     draftTone: 'warm',
   },
   {

@@ -3,9 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { planner } from '../../data/planner';
 import { tasks } from '../../data/tasks';
 import { emails } from '../../data/emails';
+import { outreachSuggestions } from '../../data/outreach';
+import { useToast } from '../../hooks/useToast';
 
 function DashboardIcon({ className }: { className?: string }) {
   return (
@@ -31,6 +34,14 @@ function InboxIcon({ className }: { className?: string }) {
   );
 }
 
+function OutreachIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+    </svg>
+  );
+}
+
 function CopilotIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -43,14 +54,18 @@ const navLinks = [
   { label: 'Dashboard', href: '/', icon: DashboardIcon },
   { label: 'Clients', href: '/clients', icon: ClientsIcon },
   { label: 'Inbox', href: '/follow-up', icon: InboxIcon },
+  { label: 'Outreach', href: '/outreach', icon: OutreachIcon },
   { label: 'Copilot', href: '/chat', icon: CopilotIcon },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { showToast } = useToast();
   const [showSettings, setShowSettings] = useState(false);
 
   const unreadEmails = emails.filter((e) => !e.isRead).length;
+  const pendingOutreach = outreachSuggestions.filter((o) => o.status === 'pending').length;
 
   const overdueTasks = tasks.filter((t) => {
     if (t.status === 'completed') return false;
@@ -67,7 +82,7 @@ export default function Sidebar() {
   return (
     <aside className="fixed inset-y-0 left-0 z-50 flex w-56 flex-col border-r border-border bg-surface-raised">
       {/* Branding */}
-      <div className="shrink-0 px-5 pt-5 pb-4">
+      <Link href="/" className="shrink-0 px-5 pt-5 pb-4 block hover:bg-surface-inset/50 transition-colors">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-ink text-sm font-bold text-white">
             M
@@ -77,14 +92,15 @@ export default function Sidebar() {
             <p className="text-[10px] text-ink-faint leading-tight">Wealth Copilot</p>
           </div>
         </div>
-      </div>
+      </Link>
 
       {/* Nav links */}
       <nav className="flex-1 space-y-0.5 px-3">
         {navLinks.map(({ label, href, icon: Icon }) => {
           const isActive =
             href === '/' ? pathname === '/' : pathname.startsWith(href);
-          const showBadge = href === '/follow-up' && unreadEmails > 0;
+          const showBadge = (href === '/follow-up' && unreadEmails > 0) || (href === '/outreach' && pendingOutreach > 0);
+          const badgeCount = href === '/follow-up' ? unreadEmails : pendingOutreach;
 
           return (
             <Link
@@ -100,7 +116,7 @@ export default function Sidebar() {
               <span className="flex-1">{label}</span>
               {showBadge && (
                 <span className={`text-[10px] font-medium ${isActive ? 'text-white/70' : 'text-ink-faint'}`}>
-                  {unreadEmails}
+                  {badgeCount}
                 </span>
               )}
             </Link>
@@ -136,14 +152,23 @@ export default function Sidebar() {
             <>
               <div className="fixed inset-0 z-40" onClick={() => setShowSettings(false)} />
               <div className="absolute bottom-full left-0 right-0 z-50 mb-2 rounded-lg border border-border bg-surface-raised py-1">
-                <button className="w-full px-4 py-2 text-left text-sm text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors">
+                <button
+                  onClick={() => { setShowSettings(false); showToast('Settings coming soon'); }}
+                  className="w-full px-4 py-2 text-left text-sm text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors"
+                >
                   Settings
                 </button>
-                <button className="w-full px-4 py-2 text-left text-sm text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors">
+                <button
+                  onClick={() => { setShowSettings(false); showToast('Help center coming soon'); }}
+                  className="w-full px-4 py-2 text-left text-sm text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors"
+                >
                   Help &amp; Support
                 </button>
                 <div className="my-1 border-t border-border-faint" />
-                <button className="w-full px-4 py-2 text-left text-sm text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors">
+                <button
+                  onClick={() => { setShowSettings(false); showToast('Signed out'); router.push('/'); }}
+                  className="w-full px-4 py-2 text-left text-sm text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors"
+                >
                   Sign Out
                 </button>
               </div>

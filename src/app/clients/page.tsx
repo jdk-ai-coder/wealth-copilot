@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Client } from '../../lib/types';
 import { clients } from '../../data/clients';
+import { useToast } from '../../hooks/useToast';
 
 function formatCurrency(value: number): string {
   if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
@@ -11,7 +13,24 @@ function formatCurrency(value: number): string {
 }
 
 export default function ClientsPage() {
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  return (
+    <Suspense>
+      <ClientsContent />
+    </Suspense>
+  );
+}
+
+function ClientsContent() {
+  const { showToast } = useToast();
+  const searchParams = useSearchParams();
+  const highlightId = searchParams.get('highlight');
+
+  const [selectedClient, setSelectedClient] = useState<Client | null>(() => {
+    if (highlightId) {
+      return clients.find((c) => c.id === highlightId) ?? null;
+    }
+    return null;
+  });
   const [search, setSearch] = useState('');
   const [sortKey, setSortKey] = useState<'name' | 'totalAssets' | 'ytdReturn' | 'nextReview'>('name');
   const [sortAsc, setSortAsc] = useState(true);
@@ -127,7 +146,7 @@ export default function ClientsPage() {
 
       {/* Client detail modal */}
       {selectedClient && (
-        <ClientDetailModal client={selectedClient} onClose={() => setSelectedClient(null)} />
+        <ClientDetailModal client={selectedClient} onClose={() => setSelectedClient(null)} showToast={showToast} />
       )}
     </div>
   );
@@ -184,10 +203,22 @@ function generateTimeSlots() {
   return slots;
 }
 
-function ClientDetailModal({ client, onClose }: { client: Client; onClose: () => void }) {
+function ClientDetailModal({ client, onClose, showToast }: { client: Client; onClose: () => void; showToast: (msg: string) => void }) {
   const [tab, setTab] = useState<ModalTab>('overview');
   const [noteText, setNoteText] = useState(client.notes || '');
   const [noteSaved, setNoteSaved] = useState(false);
+  const [showEmailCompose, setShowEmailCompose] = useState(false);
+  const [emailBody, setEmailBody] = useState('');
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [checkedGoals, setCheckedGoals] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
 
   // Schedule meeting state
   const [scheduleStep, setScheduleStep] = useState<ScheduleStep>('closed');
@@ -203,11 +234,37 @@ function ClientDetailModal({ client, onClose }: { client: Client; onClose: () =>
 
   const handleSaveNote = () => {
     setNoteSaved(true);
+    showToast('Note saved');
     setTimeout(() => setNoteSaved(false), 2000);
   };
 
   const handleConfirmMeeting = () => {
     setScheduleStep('confirmed');
+    showToast('Meeting scheduled — invite sent');
+  };
+
+  const handleSendEmail = () => {
+    if (!emailBody.trim() || isSendingEmail) return;
+    setIsSendingEmail(true);
+    setTimeout(() => {
+      setIsSendingEmail(false);
+      setShowEmailCompose(false);
+      setEmailBody('');
+      showToast(`Email sent to ${client.name}`);
+    }, 800);
+  };
+
+  const handleCall = () => {
+    showToast(`Calling ${client.name}...`);
+  };
+
+  const toggleGoal = (i: number) => {
+    setCheckedGoals((prev) => {
+      const next = new Set(prev);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
   };
 
   const slotsByDay = timeSlots.reduce<Record<string, typeof timeSlots>>((acc, slot) => {
@@ -247,13 +304,19 @@ function ClientDetailModal({ client, onClose }: { client: Client; onClose: () =>
 
           {/* Contact actions */}
           <div className="flex items-center gap-2 mt-3">
-            <button className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors">
+            <button
+              onClick={() => { setShowEmailCompose(true); setEmailBody(''); }}
+              className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors"
+            >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
               </svg>
               Email
             </button>
-            <button className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors">
+            <button
+              onClick={handleCall}
+              className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors"
+            >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
               </svg>
@@ -488,7 +551,10 @@ function ClientDetailModal({ client, onClose }: { client: Client; onClose: () =>
                       {new Date(client.nextReview + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                     </p>
                   </div>
-                  <button className="rounded-full border border-border px-3 py-1 text-xs text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors">
+                  <button
+                    onClick={() => { setScheduleStep('picking'); setTab('overview'); }}
+                    className="rounded-full border border-border px-3 py-1 text-xs text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors"
+                  >
                     Reschedule
                   </button>
                 </div>
@@ -499,9 +565,21 @@ function ClientDetailModal({ client, onClose }: { client: Client; onClose: () =>
                 <h3 className="text-xs font-medium uppercase tracking-wider text-ink-faint mb-3">Goals</h3>
                 <div className="space-y-2">
                   {client.goals.map((goal, i) => (
-                    <div key={i} className="flex items-start gap-3 rounded-lg border border-border-faint p-3">
-                      <div className="mt-0.5 h-4 w-4 shrink-0 rounded border border-border" />
-                      <p className="text-sm text-ink-muted leading-relaxed">{goal}</p>
+                    <div
+                      key={i}
+                      onClick={() => toggleGoal(i)}
+                      className="flex items-start gap-3 rounded-lg border border-border-faint p-3 cursor-pointer hover:bg-surface-inset/50 transition-colors"
+                    >
+                      <div className={`mt-0.5 h-4 w-4 shrink-0 rounded border flex items-center justify-center transition-colors ${
+                        checkedGoals.has(i) ? 'bg-ink border-ink' : 'border-border'
+                      }`}>
+                        {checkedGoals.has(i) && (
+                          <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                          </svg>
+                        )}
+                      </div>
+                      <p className={`text-sm leading-relaxed ${checkedGoals.has(i) ? 'text-ink-faint line-through' : 'text-ink-muted'}`}>{goal}</p>
                     </div>
                   ))}
                 </div>
@@ -509,6 +587,56 @@ function ClientDetailModal({ client, onClose }: { client: Client; onClose: () =>
             </div>
           )}
         </div>
+
+        {/* Email Compose Overlay */}
+        {showEmailCompose && (
+          <div className="absolute inset-0 z-20 flex flex-col bg-surface-raised">
+            <div className="shrink-0 flex items-center justify-between border-b border-border px-6 py-4">
+              <div>
+                <h3 className="text-base font-semibold text-ink">New Email</h3>
+                <p className="text-xs text-ink-muted">To {client.name}</p>
+              </div>
+              <button
+                onClick={() => { setShowEmailCompose(false); setEmailBody(''); }}
+                className="text-ink-muted hover:text-ink transition-colors p-1"
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto px-6 py-5">
+              <input
+                type="text"
+                defaultValue={`Check-in — ${client.name}`}
+                className="w-full mb-3 border-b border-border-faint pb-2 text-sm font-medium text-ink focus:outline-none focus:border-ink"
+              />
+              <textarea
+                autoFocus
+                value={emailBody}
+                onChange={(e) => setEmailBody(e.target.value)}
+                rows={10}
+                placeholder="Write your email..."
+                className="w-full border-0 bg-transparent text-sm leading-relaxed text-ink placeholder:text-ink-faint focus:outline-none resize-none"
+              />
+            </div>
+            <div className="shrink-0 flex items-center gap-2 border-t border-border px-6 py-4">
+              <button
+                onClick={handleSendEmail}
+                disabled={!emailBody.trim() || isSendingEmail}
+                className="rounded-full bg-ink px-5 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-80 disabled:opacity-40"
+              >
+                {isSendingEmail ? 'Sending...' : 'Send Email'}
+              </button>
+              <button
+                onClick={() => { setShowEmailCompose(false); setEmailBody(''); }}
+                className="rounded-full border border-border px-4 py-1.5 text-xs text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Schedule Meeting Overlay */}
         {scheduleStep !== 'closed' && (
@@ -559,7 +687,10 @@ function ClientDetailModal({ client, onClose }: { client: Client; onClose: () =>
                       Done
                     </button>
                     <button
-                      onClick={() => { setScheduleStep('closed'); setSelectedSlot(null); setMeetingNotes(''); }}
+                      onClick={() => {
+                        showToast('Added to calendar');
+                        setScheduleStep('closed'); setSelectedSlot(null); setMeetingNotes('');
+                      }}
                       className="rounded-full border border-border px-5 py-1.5 text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors"
                     >
                       Add to Calendar

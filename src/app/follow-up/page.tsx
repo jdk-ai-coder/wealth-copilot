@@ -1,34 +1,129 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Email } from '../../lib/types';
 import { emails } from '../../data/emails';
 import { timeAgo } from '../../lib/utils';
+import { useToast } from '../../hooks/useToast';
 
 type FilterKey = 'all' | 'unread' | 'drafts' | 'follow-ups';
 
 export default function FollowUpPage() {
+  const { showToast } = useToast();
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(emails[0] ?? null);
   const [approvedIds, setApprovedIds] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<FilterKey>('all');
   const [showDraftModal, setShowDraftModal] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedText, setEditedText] = useState('');
+  const [isEdited, setIsEdited] = useState(false);
+  const [showReplyCompose, setShowReplyCompose] = useState(false);
+  const [showForwardCompose, setShowForwardCompose] = useState(false);
+  const [composeText, setComposeText] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [readIds, setReadIds] = useState<Set<string>>(new Set());
+
+  const isApproved = selectedEmail ? approvedIds.has(selectedEmail.id) : false;
+  const draft = selectedEmail?.draftReply;
 
   const handleApprove = () => {
-    if (selectedEmail) {
-      setApprovedIds((prev) => new Set(prev).add(selectedEmail.id));
-      setShowDraftModal(false);
+    if (selectedEmail && !isSending) {
+      setIsSending(true);
+      setTimeout(() => {
+        setApprovedIds((prev) => new Set(prev).add(selectedEmail.id));
+        setShowDraftModal(false);
+        setIsSending(false);
+        showToast('Reply sent successfully');
+      }, 800);
     }
+  };
+
+  const handleSelectEmail = (email: Email) => {
+    if (isEditing && isEdited) {
+      if (!confirm('You have unsaved edits. Discard changes?')) return;
+    }
+    setSelectedEmail(email);
+    setShowDraftModal(false);
+    setIsEditing(false);
+    setIsEdited(false);
+    setEditedText('');
+    setShowReplyCompose(false);
+    setShowForwardCompose(false);
+    setComposeText('');
+    setReadIds((prev) => new Set(prev).add(email.id));
+  };
+
+  const handleCloseModal = () => {
+    if (isEditing && editedText !== (draft?.body ?? '')) {
+      if (!confirm('You have unsaved edits. Discard changes?')) return;
+    }
+    setShowDraftModal(false);
+    setIsEditing(false);
+  };
+
+  const handleSendCompose = (type: 'reply' | 'forward') => {
+    if (!composeText.trim() || isSending) return;
+    setIsSending(true);
+    setTimeout(() => {
+      setIsSending(false);
+      setShowReplyCompose(false);
+      setShowForwardCompose(false);
+      setComposeText('');
+      showToast(type === 'reply' ? 'Reply sent' : 'Email forwarded');
+    }, 800);
   };
 
   const handleGenerateReply = () => {
     setIsGenerating(true);
+    setIsEditing(false);
+    setIsEdited(false);
     // Simulate AI generation delay
     setTimeout(() => {
       setIsGenerating(false);
       setShowDraftModal(true);
     }, 1500);
   };
+
+  const handleEditDraft = () => {
+    if (draft) {
+      setEditedText(isEdited ? editedText : draft.body);
+      setIsEditing(true);
+    }
+  };
+
+  const handleSaveEdit = () => {
+    setIsEdited(true);
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    if (!isEdited) setEditedText('');
+  };
+
+  const handleRegenerate = () => {
+    if (isEdited) {
+      if (!confirm('You have unsaved edits. Regenerating will discard them. Continue?')) return;
+    }
+    setIsEdited(false);
+    setEditedText('');
+    setShowDraftModal(false);
+    setTimeout(handleGenerateReply, 100);
+  };
+
+  const handleEscape = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      if (showDraftModal) { setShowDraftModal(false); setIsEditing(false); return; }
+      if (showReplyCompose) { setShowReplyCompose(false); setComposeText(''); return; }
+      if (showForwardCompose) { setShowForwardCompose(false); setComposeText(''); return; }
+    }
+  }, [showDraftModal, showReplyCompose, showForwardCompose]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [handleEscape]);
 
   const unreadCount = emails.filter((e) => !e.isRead).length;
   const draftsCount = emails.filter((e) => e.draftReply && !approvedIds.has(e.id)).length;
@@ -49,9 +144,6 @@ export default function FollowUpPage() {
     { key: 'drafts', label: 'Has Draft', count: draftsCount },
     { key: 'follow-ups', label: 'Follow-ups', count: followUpCount },
   ];
-
-  const isApproved = selectedEmail ? approvedIds.has(selectedEmail.id) : false;
-  const draft = selectedEmail?.draftReply;
 
   return (
     <div className="flex h-[calc(100vh-3rem)]">
@@ -102,7 +194,7 @@ export default function FollowUpPage() {
               return (
                 <div
                   key={email.id}
-                  onClick={() => { setSelectedEmail(email); setShowDraftModal(false); }}
+                  onClick={() => handleSelectEmail(email)}
                   className={`cursor-pointer border-b border-border-faint px-4 py-3 transition-colors ${
                     isSelected ? 'bg-surface-inset' : 'hover:bg-surface-inset/50'
                   } ${approved ? 'opacity-40' : ''}`}
@@ -110,7 +202,7 @@ export default function FollowUpPage() {
                   <div className="flex items-start gap-2.5">
                     {/* Unread dot */}
                     <div className="pt-1.5 w-2 shrink-0">
-                      {!email.isRead && !approved && (
+                      {!email.isRead && !approved && !readIds.has(email.id) && (
                         <span className="block h-1.5 w-1.5 rounded-full bg-ink" />
                       )}
                     </div>
@@ -158,10 +250,16 @@ export default function FollowUpPage() {
               <div className="flex items-center gap-2">
                 {!isApproved && (
                   <>
-                    <button className="rounded-full border border-border px-3 py-1.5 text-xs text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors">
+                    <button
+                      onClick={() => { setShowReplyCompose(true); setShowForwardCompose(false); setComposeText(''); }}
+                      className="rounded-full border border-border px-3 py-1.5 text-xs text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors"
+                    >
                       Reply
                     </button>
-                    <button className="rounded-full border border-border px-3 py-1.5 text-xs text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors">
+                    <button
+                      onClick={() => { setShowForwardCompose(true); setShowReplyCompose(false); setComposeText(''); }}
+                      className="rounded-full border border-border px-3 py-1.5 text-xs text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors"
+                    >
                       Forward
                     </button>
                     {draft && (
@@ -225,11 +323,52 @@ export default function FollowUpPage() {
                     </div>
                   </div>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed text-ink-muted pl-11">
-                    {draft.body}
+                    {isEdited ? editedText : draft.body}
                   </div>
                 </div>
               )}
             </div>
+
+            {/* Reply / Forward compose panel */}
+            {(showReplyCompose || showForwardCompose) && selectedEmail && (
+              <div className="shrink-0 border-t border-border px-6 py-4 bg-surface-inset/30">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs font-medium text-ink">
+                    {showReplyCompose ? `Reply to ${selectedEmail.clientName}` : 'Forward email'}
+                  </p>
+                  <button
+                    onClick={() => { setShowReplyCompose(false); setShowForwardCompose(false); setComposeText(''); }}
+                    className="text-xs text-ink-faint hover:text-ink transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+                {showForwardCompose && (
+                  <input
+                    type="text"
+                    placeholder="To: email@example.com"
+                    className="w-full mb-2 rounded border border-border bg-surface-raised px-3 py-1.5 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:border-ink"
+                  />
+                )}
+                <textarea
+                  autoFocus
+                  value={composeText}
+                  onChange={(e) => setComposeText(e.target.value)}
+                  rows={4}
+                  placeholder={showReplyCompose ? 'Write your reply...' : 'Add a message...'}
+                  className="w-full rounded border border-border bg-surface-raised p-3 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:border-ink resize-none"
+                />
+                <div className="flex items-center gap-2 mt-2">
+                  <button
+                    onClick={() => handleSendCompose(showReplyCompose ? 'reply' : 'forward')}
+                    disabled={!composeText.trim() || isSending}
+                    className="rounded-full bg-ink px-4 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-80 disabled:opacity-40"
+                  >
+                    {isSending ? 'Sending...' : showReplyCompose ? 'Send Reply' : 'Forward'}
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Generating indicator overlay */}
             {isGenerating && (
@@ -255,7 +394,7 @@ export default function FollowUpPage() {
       {/* AI Draft Reply Modal */}
       {showDraftModal && draft && selectedEmail && !isApproved && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-ink/40" onClick={() => setShowDraftModal(false)} />
+          <div className="absolute inset-0 bg-ink/40" onClick={handleCloseModal} />
           <div className="relative z-10 mx-4 w-full max-w-2xl max-h-[80vh] overflow-hidden rounded-lg border border-border bg-surface-raised flex flex-col animate-fade-in">
             {/* Modal header */}
             <div className="shrink-0 flex items-center justify-between border-b border-border px-6 py-4">
@@ -268,7 +407,7 @@ export default function FollowUpPage() {
                   Re: {draft.subject} &middot; To {selectedEmail.clientName}
                 </p>
               </div>
-              <button onClick={() => setShowDraftModal(false)} className="text-ink-muted hover:text-ink transition-colors p-1">
+              <button onClick={handleCloseModal} className="text-ink-muted hover:text-ink transition-colors p-1">
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -277,33 +416,67 @@ export default function FollowUpPage() {
 
             {/* Draft body */}
             <div className="flex-1 overflow-y-auto px-6 py-5">
-              <div className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
-                {draft.body}
-              </div>
+              {isEditing ? (
+                <textarea
+                  autoFocus
+                  value={editedText}
+                  onChange={(e) => setEditedText(e.target.value)}
+                  className="w-full h-full min-h-[200px] resize-none border-0 bg-transparent text-sm leading-relaxed text-ink outline-none focus:ring-0"
+                />
+              ) : (
+                <div className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
+                  {isEdited ? editedText : draft.body}
+                </div>
+              )}
             </div>
 
             {/* Actions */}
             <div className="shrink-0 flex items-center justify-between border-t border-border px-6 py-4">
               <div className="flex items-center gap-2">
-                <button className="rounded-full border border-border px-4 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:text-ink hover:bg-surface-inset">
-                  Edit Draft
-                </button>
-                <button
-                  onClick={() => {
-                    setShowDraftModal(false);
-                    setTimeout(handleGenerateReply, 100);
-                  }}
-                  className="rounded-full border border-border px-4 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:text-ink hover:bg-surface-inset"
-                >
-                  Regenerate
-                </button>
+                {isEditing ? (
+                  <>
+                    <button
+                      onClick={handleSaveEdit}
+                      className="rounded-full bg-ink px-4 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-80"
+                    >
+                      Save Changes
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      className="rounded-full border border-border px-4 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:text-ink hover:bg-surface-inset"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={handleEditDraft}
+                      className="rounded-full border border-border px-4 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:text-ink hover:bg-surface-inset"
+                    >
+                      Edit Draft
+                    </button>
+                    <button
+                      onClick={handleRegenerate}
+                      className="rounded-full border border-border px-4 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:text-ink hover:bg-surface-inset"
+                    >
+                      Regenerate
+                    </button>
+                  </>
+                )}
+                {isEdited && !isEditing && (
+                  <span className="text-[10px] text-ink-faint">Edited</span>
+                )}
               </div>
-              <button
-                onClick={handleApprove}
-                className="rounded-full bg-ink px-5 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-80"
-              >
-                Approve &amp; Send
-              </button>
+              {!isEditing && (
+                <button
+                  onClick={handleApprove}
+                  disabled={isSending}
+                  className="rounded-full bg-ink px-5 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-80 disabled:opacity-60"
+                >
+                  {isSending ? 'Sending...' : 'Approve & Send'}
+                </button>
+              )}
             </div>
           </div>
         </div>

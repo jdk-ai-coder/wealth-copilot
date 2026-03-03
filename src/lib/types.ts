@@ -166,6 +166,27 @@ export interface DemoPhase {
   steps: DemoStep[];
 }
 
+export interface OutreachSuggestion {
+  id: string;
+  clientId: string;
+  clientName: string;
+  category: 'Market & Portfolio' | 'Life Events' | 'Account Activity' | 'Relationship' | 'Planning Milestones';
+  priority: 'urgent' | 'high' | 'medium' | 'low';
+  trigger: string;
+  whyExplanation: string;
+  suggestedAction: string;
+  context: { label: string; value: string }[];
+  detectedAt: string;
+  status: 'pending' | 'snoozed' | 'completed' | 'dismissed';
+  completedAt?: string;
+  completionMethod?: string;
+  snoozedUntil?: string;
+  resurfaced?: boolean;
+  draftSubject?: string;
+  draftBody?: string;
+  draftTone?: 'professional' | 'warm' | 'urgent';
+}
+
 export type FeedItem =
   | { type: 'meeting'; data: Meeting }
   | { type: 'email'; data: Email };

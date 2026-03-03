@@ -6,7 +6,7 @@ import LayoutShell from '../components/LayoutShell';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'Meridian Copilot — AI Wealth Management',
+  title: 'Wealth Management Demo',
   description: 'AI-powered copilot for financial advisors',
 };
 

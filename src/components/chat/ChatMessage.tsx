@@ -44,7 +44,7 @@ export default function ChatMessage({ message }: ChatMessageProps) {
       </div>
 
       {/* Message */}
-      <div className={`max-w-[75%] space-y-1 ${isUser ? 'items-end' : 'items-start'}`}>
+      <div className={`max-w-[85%] space-y-1 ${isUser ? 'items-end' : 'items-start'}`}>
         <div
           className={`rounded-lg px-4 py-3 text-sm leading-relaxed ${
             isUser

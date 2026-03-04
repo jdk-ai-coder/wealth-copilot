@@ -91,16 +91,16 @@ export default function Sidebar() {
     .join('');
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-50 flex w-56 flex-col border-r border-border bg-surface-raised">
+    <aside className="fixed inset-y-0 left-0 z-50 flex w-56 flex-col bg-sidebar">
       {/* Branding */}
-      <Link href="/" className="shrink-0 px-5 pt-5 pb-4 block hover:bg-surface-inset/50 transition-colors">
+      <Link href="/" className="shrink-0 px-5 pt-5 pb-4 block hover:bg-sidebar-hover transition-colors">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-blue text-sm font-bold text-white">
             V
           </div>
           <div>
-            <p className="text-sm font-semibold text-ink leading-tight">Vantage</p>
-            <p className="text-[10px] text-ink-faint leading-tight">Wealth Copilot</p>
+            <p className="text-sm font-semibold text-sidebar-ink leading-tight">Vantage</p>
+            <p className="text-[10px] text-sidebar-ink-muted leading-tight">Wealth Copilot</p>
           </div>
         </div>
       </Link>
@@ -119,14 +119,16 @@ export default function Sidebar() {
               href={href}
               className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors ${
                 isActive
-                  ? 'bg-accent-blue-light text-accent-blue font-medium'
-                  : 'text-ink-muted hover:text-ink hover:bg-surface-inset'
+                  ? 'bg-sidebar-active text-white font-medium'
+                  : 'text-sidebar-ink-muted hover:text-sidebar-ink hover:bg-sidebar-hover'
               }`}
             >
               <Icon className="h-4 w-4 shrink-0" />
               <span className="flex-1">{label}</span>
               {showBadge && (
-                <span className={`text-[10px] font-medium ${isActive ? 'text-accent-blue/70' : 'text-ink-faint'}`}>
+                <span className={`min-w-[18px] text-center rounded-full px-1.5 py-0.5 text-[10px] font-semibold leading-none ${
+                  isActive ? 'bg-white/20 text-white' : 'bg-sidebar-hover text-sidebar-ink-muted'
+                }`}>
                   {badgeCount}
                 </span>
               )}
@@ -136,10 +138,10 @@ export default function Sidebar() {
       </nav>
 
       {/* Bottom section */}
-      <div className="border-t border-border px-3 py-4 space-y-3">
+      <div className="border-t border-sidebar-border px-3 py-4 space-y-3">
         {overdueTasks.length > 0 && (
-          <p className="px-1 text-xs text-ink-muted">
-            <span className="font-semibold text-ink">{overdueTasks.length} overdue</span> tasks
+          <p className="px-1 text-xs text-sidebar-ink-muted">
+            <span className="font-semibold text-accent-amber">{overdueTasks.length} overdue</span> tasks
           </p>
         )}
 
@@ -147,14 +149,14 @@ export default function Sidebar() {
         <div className="relative">
           <button
             onClick={() => setShowSettings(!showSettings)}
-            className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-surface-inset"
+            className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-sidebar-hover"
           >
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent-blue to-accent-purple text-xs font-medium text-white">
               {initials}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-ink leading-tight">{planner.name}</p>
-              <p className="text-[11px] text-ink-muted leading-tight">{planner.title}</p>
+              <p className="text-sm font-medium text-sidebar-ink leading-tight">{planner.name}</p>
+              <p className="text-[11px] text-sidebar-ink-muted leading-tight">{planner.title}</p>
             </div>
           </button>
 
@@ -162,23 +164,23 @@ export default function Sidebar() {
           {showSettings && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setShowSettings(false)} />
-              <div className="absolute bottom-full left-0 right-0 z-50 mb-2 rounded-lg border border-border bg-surface-raised py-1">
+              <div className="absolute bottom-full left-0 right-0 z-50 mb-2 rounded-lg border border-sidebar-border bg-sidebar py-1 shadow-lg">
                 <button
                   onClick={() => { setShowSettings(false); showToast('Settings coming soon'); }}
-                  className="w-full px-4 py-2 text-left text-sm text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors"
+                  className="w-full px-4 py-2 text-left text-sm text-sidebar-ink-muted hover:text-sidebar-ink hover:bg-sidebar-hover transition-colors"
                 >
                   Settings
                 </button>
                 <button
                   onClick={() => { setShowSettings(false); showToast('Help center coming soon'); }}
-                  className="w-full px-4 py-2 text-left text-sm text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors"
+                  className="w-full px-4 py-2 text-left text-sm text-sidebar-ink-muted hover:text-sidebar-ink hover:bg-sidebar-hover transition-colors"
                 >
                   Help &amp; Support
                 </button>
-                <div className="my-1 border-t border-border-faint" />
+                <div className="my-1 border-t border-sidebar-border" />
                 <button
                   onClick={() => { setShowSettings(false); showToast('Signed out'); router.push('/'); }}
-                  className="w-full px-4 py-2 text-left text-sm text-ink-muted hover:text-ink hover:bg-surface-inset transition-colors"
+                  className="w-full px-4 py-2 text-left text-sm text-sidebar-ink-muted hover:text-sidebar-ink hover:bg-sidebar-hover transition-colors"
                 >
                   Sign Out
                 </button>

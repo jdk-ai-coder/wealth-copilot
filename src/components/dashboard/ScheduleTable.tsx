@@ -52,10 +52,10 @@ export default function ScheduleTable() {
 
   const outreachRows: ScheduleRow[] = urgentHighOutreach.map((o) => ({
     id: `outreach-${o.id}`,
-    time: '—',
+    time: '\u2014',
     sortMinutes: o.priority === 'urgent' ? -2 : -1,
     type: 'Outreach' as const,
-    title: o.trigger.length > 80 ? o.trigger.slice(0, 80) + '…' : o.trigger,
+    title: o.trigger.length > 80 ? o.trigger.slice(0, 80) + '\u2026' : o.trigger,
     client: o.clientName,
     status: o.priority.charAt(0).toUpperCase() + o.priority.slice(1),
     href: `/outreach#outreach-${o.id}`,
@@ -65,10 +65,10 @@ export default function ScheduleTable() {
 
   function statusBadge(status: string, priority?: string) {
     if (priority === 'urgent') {
-      return <span className="rounded-full bg-red-100 px-2.5 py-0.5 text-[11px] font-semibold text-red-700">Urgent</span>;
+      return <span className="rounded-full bg-accent-red-light px-2.5 py-0.5 text-[11px] font-semibold text-accent-red">Urgent</span>;
     }
     if (priority === 'high') {
-      return <span className="rounded-full bg-orange-100 px-2.5 py-0.5 text-[11px] font-semibold text-orange-700">High</span>;
+      return <span className="rounded-full bg-accent-amber-light px-2.5 py-0.5 text-[11px] font-semibold text-accent-amber">High</span>;
     }
     switch (status) {
       case 'Unread':
@@ -90,16 +90,16 @@ export default function ScheduleTable() {
   }
 
   return (
-    <div className="rounded-lg border border-border bg-surface-raised shadow-sm overflow-hidden">
+    <div className="rounded-lg border border-border bg-surface-raised overflow-hidden">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border bg-surface-inset/50 text-left text-[11px] font-semibold uppercase tracking-wider text-ink-faint">
-            <th className="py-2 pl-4 pr-6">Time</th>
-            <th className="py-2 pr-6">Type</th>
-            <th className="py-2 pr-6">Title</th>
-            <th className="py-2 pr-6">Client</th>
-            <th className="py-2 pr-6">Status</th>
-            <th className="py-2 pr-4"></th>
+            <th className="py-2.5 pl-4 pr-6">Time</th>
+            <th className="py-2.5 pr-6">Type</th>
+            <th className="py-2.5 pr-6">Title</th>
+            <th className="py-2.5 pr-6">Client</th>
+            <th className="py-2.5 pr-6">Status</th>
+            <th className="py-2.5 pr-4"></th>
           </tr>
         </thead>
         <tbody>
@@ -107,29 +107,27 @@ export default function ScheduleTable() {
           {outreachRows.length > 0 && (
             <>
               <tr>
-                <td colSpan={6} className="bg-orange-50/60 px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-orange-700 border-b border-orange-200/50">
+                <td colSpan={6} className="bg-surface-inset/40 px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-ink-muted border-b border-border">
                   <div className="flex items-center gap-1.5">
-                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <svg className="h-3 w-3 text-accent-amber" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                     </svg>
                     Suggested Outreach
                   </div>
                 </td>
               </tr>
-              {outreachRows.map((row, i) => (
+              {outreachRows.map((row) => (
                 <tr
                   key={row.id}
                   onClick={() => router.push(row.href)}
-                  className={`group cursor-pointer border-b border-border-faint transition-colors hover:bg-orange-50/50 ${
-                    i % 2 === 1 ? 'bg-surface-inset/20' : ''
-                  }`}
+                  className="group cursor-pointer border-b border-border-faint transition-colors hover:bg-surface-inset/40"
                 >
-                  <td className="whitespace-nowrap py-2 pl-4 pr-6 text-ink-faint">{row.time}</td>
-                  <td className="py-2 pr-6">{typePill(row.type)}</td>
-                  <td className="max-w-xs truncate py-2 pr-6 font-medium text-ink">{row.title}</td>
-                  <td className="py-2 pr-6 text-ink-muted">{row.client}</td>
-                  <td className="py-2 pr-6">{statusBadge(row.status, row.priority)}</td>
-                  <td className="py-2 pr-4 text-right">
+                  <td className="whitespace-nowrap py-2.5 pl-4 pr-6 text-ink-faint">{row.time}</td>
+                  <td className="py-2.5 pr-6">{typePill(row.type)}</td>
+                  <td className="max-w-xs truncate py-2.5 pr-6 font-medium text-ink">{row.title}</td>
+                  <td className="py-2.5 pr-6 text-ink-muted whitespace-nowrap">{row.client}</td>
+                  <td className="py-2.5 pr-6">{statusBadge(row.status, row.priority)}</td>
+                  <td className="py-2.5 pr-4 text-right">
                     <span className="text-xs font-medium text-accent-blue opacity-0 group-hover:opacity-100 transition-opacity">
                       {row.action} &rarr;
                     </span>
@@ -141,25 +139,23 @@ export default function ScheduleTable() {
           {/* Email section header */}
           {outreachRows.length > 0 && emailRows.length > 0 && (
             <tr>
-              <td colSpan={6} className="bg-surface-inset/50 px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-ink-faint border-b border-border">
+              <td colSpan={6} className="bg-surface-inset/40 px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-ink-muted border-b border-border">
                 Emails &amp; Follow-ups
               </td>
             </tr>
           )}
-          {emailRows.map((row, i) => (
+          {emailRows.map((row) => (
             <tr
               key={row.id}
               onClick={() => router.push(row.href)}
-              className={`group cursor-pointer border-b border-border-faint transition-colors hover:bg-accent-blue-light/60 hover:shadow-sm ${
-                i % 2 === 1 ? 'bg-surface-inset/30' : ''
-              }`}
+              className="group cursor-pointer border-b border-border-faint last:border-0 transition-colors hover:bg-surface-inset/40"
             >
-              <td className="whitespace-nowrap py-2 pl-4 pr-6 font-semibold text-ink">{row.time}</td>
-              <td className="py-2 pr-6">{typePill(row.type)}</td>
-              <td className="max-w-xs truncate py-2 pr-6 font-medium text-ink">{row.title}</td>
-              <td className="py-2 pr-6 text-ink-muted">{row.client}</td>
-              <td className="py-2 pr-6">{statusBadge(row.status)}</td>
-              <td className="py-2 pr-4 text-right">
+              <td className="whitespace-nowrap py-2.5 pl-4 pr-6 font-semibold text-ink">{row.time}</td>
+              <td className="py-2.5 pr-6">{typePill(row.type)}</td>
+              <td className="max-w-xs truncate py-2.5 pr-6 font-medium text-ink">{row.title}</td>
+              <td className="py-2.5 pr-6 text-ink-muted whitespace-nowrap">{row.client}</td>
+              <td className="py-2.5 pr-6">{statusBadge(row.status)}</td>
+              <td className="py-2.5 pr-4 text-right">
                 <span className="text-xs font-medium text-accent-blue opacity-0 group-hover:opacity-100 transition-opacity">
                   {row.action} &rarr;
                 </span>

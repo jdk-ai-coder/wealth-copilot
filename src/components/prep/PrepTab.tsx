@@ -11,7 +11,7 @@ export default function PrepTab({ prepDoc }: PrepTabProps) {
   const snap = prepDoc.financialSnapshot;
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-6">
       {/* Header */}
       <div>
         <h2 className="text-lg font-semibold text-ink">AI-Generated Meeting Prep</h2>
@@ -19,103 +19,116 @@ export default function PrepTab({ prepDoc }: PrepTabProps) {
       </div>
 
       {/* Overview */}
-      <section>
+      <Card>
         <SectionLabel label="Overview" />
         <div className="space-y-3">
           {prepDoc.overview.split('\n\n').map((para, i) => (
             <p key={i} className="text-sm leading-relaxed text-ink-muted">{para}</p>
           ))}
         </div>
-      </section>
-
-      {/* Conversation Starters */}
-      <section>
-        <SectionLabel label="Conversation Starters" />
-        <div className="space-y-3">
-          {prepDoc.conversationStarters.map((starter, i) => (
-            <p key={i} className="text-sm leading-relaxed text-ink-muted pl-4 border-l-2 border-border">
-              {starter}
-            </p>
-          ))}
-        </div>
-      </section>
+      </Card>
 
       {/* Financial Snapshot */}
-      <section>
+      <Card>
         <SectionLabel label="Financial Snapshot" />
-        <div className="flex items-baseline gap-8 text-sm text-ink-muted">
-          <span>
-            <span className="text-xl font-semibold text-ink">{formatCurrency(snap.totalAssets)}</span>{' '}
-            total assets
-          </span>
-          <span>
-            <span className="text-xl font-semibold text-ink">{formatPercent(snap.ytdReturn)}</span>{' '}
-            YTD return
-          </span>
-          <span>
-            <span className="text-xl font-semibold text-ink">
-              {(snap.portfolioChange >= 0 ? '+' : '') + formatCurrency(snap.portfolioChange)}
-            </span>{' '}
-            change
-          </span>
+        <div className="grid grid-cols-3 gap-4">
+          <StatBox label="Total Assets" value={formatCurrency(snap.totalAssets)} />
+          <StatBox label="YTD Return" value={formatPercent(snap.ytdReturn)} />
+          <StatBox
+            label="Portfolio Change"
+            value={(snap.portfolioChange >= 0 ? '+' : '') + formatCurrency(snap.portfolioChange)}
+          />
         </div>
 
         {snap.keyMetrics.length > 0 && (
-          <div className="mt-4 space-y-1">
+          <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-2">
             {snap.keyMetrics.map((m, i) => (
-              <div key={i} className="flex items-center gap-3 text-sm">
-                <span className="text-ink-faint w-40">{m.label}</span>
-                <span className="text-ink">{m.value}</span>
+              <div key={i} className="flex items-center justify-between gap-3 text-sm py-1.5 border-b border-border-faint last:border-0">
+                <span className="text-ink-faint">{m.label}</span>
+                <span className="text-ink font-medium">{m.value}</span>
               </div>
             ))}
           </div>
         )}
-      </section>
+      </Card>
 
-      {/* Recent Activity */}
-      <section>
-        <SectionLabel label="Recent Activity" />
-        <div className="space-y-2">
-          {prepDoc.recentActivity.map((activity, i) => (
-            <p key={i} className="text-sm leading-relaxed text-ink-muted">
-              <span className="text-ink-faint mr-2">-</span>
-              {activity}
-            </p>
+      {/* Conversation Starters */}
+      <Card>
+        <SectionLabel label="Conversation Starters" />
+        <div className="grid grid-cols-2 gap-3">
+          {prepDoc.conversationStarters.map((starter, i) => (
+            <div key={i} className="rounded-md border border-border-faint bg-surface-inset p-3">
+              <p className="text-sm leading-relaxed text-ink-muted">{starter}</p>
+            </div>
           ))}
         </div>
-      </section>
+      </Card>
 
-      {/* Open Tasks */}
-      {prepDoc.clientTasks.length > 0 && (
-        <section>
-          <SectionLabel label="Client Tasks" />
-          <div className="space-y-0">
-            {prepDoc.clientTasks.map((task) => (
-              <TaskRow key={task.id} task={task} />
-            ))}
-          </div>
-        </section>
-      )}
+      {/* Recent Activity */}
+      <Card>
+        <SectionLabel label="Recent Activity" />
+        <div className="space-y-0">
+          {prepDoc.recentActivity.map((activity, i) => (
+            <div key={i} className="flex items-start gap-2.5 py-2 border-b border-border-faint last:border-0">
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-ink-faint" />
+              <p className="text-sm leading-relaxed text-ink-muted">{activity}</p>
+            </div>
+          ))}
+        </div>
+      </Card>
 
-      {prepDoc.plannerTasks.length > 0 && (
-        <section>
-          <SectionLabel label="Your Tasks" />
-          <div className="space-y-0">
-            {prepDoc.plannerTasks.map((task) => (
-              <TaskRow key={task.id} task={task} />
-            ))}
-          </div>
-        </section>
+      {/* Tasks */}
+      {(prepDoc.clientTasks.length > 0 || prepDoc.plannerTasks.length > 0) && (
+        <div className="grid grid-cols-2 gap-6">
+          {prepDoc.clientTasks.length > 0 && (
+            <Card>
+              <SectionLabel label="Client Tasks" />
+              <div className="space-y-0">
+                {prepDoc.clientTasks.map((task) => (
+                  <TaskRow key={task.id} task={task} />
+                ))}
+              </div>
+            </Card>
+          )}
+
+          {prepDoc.plannerTasks.length > 0 && (
+            <Card>
+              <SectionLabel label="Your Tasks" />
+              <div className="space-y-0">
+                {prepDoc.plannerTasks.map((task) => (
+                  <TaskRow key={task.id} task={task} />
+                ))}
+              </div>
+            </Card>
+          )}
+        </div>
       )}
+    </div>
+  );
+}
+
+function Card({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="rounded-lg border border-border bg-surface p-5">
+      {children}
     </div>
   );
 }
 
 function SectionLabel({ label }: { label: string }) {
   return (
-    <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-ink-faint">
+    <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-ink-faint">
       {label}
     </h3>
+  );
+}
+
+function StatBox({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-md border border-border-faint bg-surface-inset px-4 py-3">
+      <p className="text-xs text-ink-faint mb-1">{label}</p>
+      <p className="text-xl font-semibold text-ink">{value}</p>
+    </div>
   );
 }
 

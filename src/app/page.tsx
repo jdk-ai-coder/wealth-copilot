@@ -93,48 +93,57 @@ export default function Home() {
             const isLive = meeting.status === 'in-progress';
             const isCompleted = meeting.status === 'completed';
             const href = isCompleted ? `/meetings/${meeting.id}` : `/prep/${meeting.id}`;
-            const actionLabel = isCompleted ? 'Review' : isLive ? 'View Live' : 'Prep';
+            const actionLabel = isCompleted ? 'Review Notes' : isLive ? 'View Live' : 'Prep Now';
+            const initials = meeting.clientName.split(' ').filter(n => n.length > 1 && n[0] === n[0].toUpperCase()).map(n => n[0]).slice(0, 2).join('');
+            const accentBorder = isLive ? 'border-l-accent-green' : isCompleted ? 'border-l-ink-faint' : 'border-l-accent-blue';
 
             return (
               <Link
                 key={meeting.id}
                 href={href}
-                className={`group relative flex flex-col rounded-lg border bg-surface-raised px-5 py-4 transition-all hover:shadow-md hover:-translate-y-0.5 ${
-                  isLive ? 'border-accent-green shadow-sm' : 'border-border hover:border-ink/20'
-                }`}
+                className={`group relative flex flex-col rounded-lg border border-l-[3px] bg-surface-raised px-5 py-4 transition-all hover:shadow-md hover:-translate-y-0.5 ${
+                  isLive ? 'border-border shadow-sm' : 'border-border hover:border-ink/20'
+                } ${accentBorder}`}
               >
-                {/* Live indicator */}
-                {isLive && (
-                  <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-accent-green animate-pulse" />
-                    <span className="text-[10px] font-semibold text-accent-green uppercase tracking-wider">Live</span>
-                  </div>
-                )}
-
-                {/* Time */}
-                <p className="text-sm font-semibold text-ink">{meeting.time}</p>
-
-                {/* Client name */}
-                <p className="mt-1.5 text-base font-bold text-ink leading-tight">{meeting.clientName}</p>
-
-                {/* Type badge */}
-                <div className="mt-2">
-                  <MeetingTypeBadge type={meeting.type} />
+                {/* Top row: time + live badge */}
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold text-ink-muted">{meeting.time} <span className="font-normal text-ink-faint">&middot; {meeting.duration} min</span></p>
+                  {isLive && (
+                    <div className="flex items-center gap-1.5">
+                      <span className="h-2 w-2 rounded-full bg-accent-green animate-pulse" />
+                      <span className="text-[10px] font-semibold text-accent-green uppercase tracking-wider">Live</span>
+                    </div>
+                  )}
+                  {isCompleted && (
+                    <svg className="h-4 w-4 text-accent-green" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  )}
                 </div>
 
-                {/* Duration */}
-                <p className="mt-2 text-[11px] text-ink-faint">{meeting.duration} min</p>
+                {/* Client row: avatar + name */}
+                <div className="mt-3 flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-inset text-xs font-semibold text-ink-muted">
+                    {initials}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-ink leading-tight truncate">{meeting.clientName}</p>
+                    <div className="mt-1">
+                      <MeetingTypeBadge type={meeting.type} />
+                    </div>
+                  </div>
+                </div>
 
                 {/* Action button */}
-                <div className={`mt-auto pt-3 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                <div className={`mt-auto pt-4 inline-flex items-center gap-1.5 text-xs font-medium transition-colors ${
                   isLive
-                    ? 'bg-accent-green-light text-accent-green'
+                    ? 'text-accent-green'
                     : isCompleted
-                    ? 'bg-surface-inset text-ink-muted group-hover:text-ink'
-                    : 'bg-accent-blue-light text-accent-blue'
+                    ? 'text-ink-faint group-hover:text-ink-muted'
+                    : 'text-accent-blue'
                 }`}>
                   {actionLabel}
-                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <svg className="h-3 w-3 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
                 </div>
@@ -145,7 +154,7 @@ export default function Home() {
       </div>
 
       {/* Quick Actions */}
-      <div className="mt-10">
+      <div className="mt-12">
         <h2 className="text-lg font-bold tracking-tight text-ink">Quick Actions</h2>
         <p className="mt-1 text-sm text-ink-faint">Jump to what matters most right now</p>
         <div className="mt-4 grid grid-cols-3 gap-4">
@@ -226,7 +235,7 @@ export default function Home() {
       </div>
 
       {/* Emails & Outreach table */}
-      <div className="mt-10" id="schedule">
+      <div className="mt-12" id="schedule">
         <div className="flex items-baseline justify-between">
           <div>
             <h2 className="text-lg font-bold tracking-tight text-ink">Emails &amp; Outreach</h2>

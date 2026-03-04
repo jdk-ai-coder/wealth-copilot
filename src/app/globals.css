@@ -3,7 +3,14 @@
 @theme inline {
   --color-surface: #f7f8f3;
   --color-surface-raised: #f2f3ed;
-  --color-surface-inset: #eef0e8;
+  --color-surface-inset: #eaece3;
+  --color-sidebar: #2c3227;
+  --color-sidebar-hover: #3a4134;
+  --color-sidebar-active: #454e3f;
+  --color-sidebar-ink: #e8eae4;
+  --color-sidebar-ink-muted: #a8ad9f;
+  --color-sidebar-ink-faint: #7d8275;
+  --color-sidebar-border: #3d4537;
   --color-ink: #1c1f17;
   --color-ink-muted: #5e6356;
   --color-ink-faint: #959a8c;

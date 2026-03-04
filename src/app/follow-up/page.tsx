@@ -8,6 +8,55 @@ import { useToast } from '../../hooks/useToast';
 
 type FilterKey = 'all' | 'unread' | 'drafts' | 'follow-ups';
 
+// ── Draft Tweak Chips ────────────────────────────────────────────────
+const TWEAK_CHIPS = [
+  { id: 'personal', label: 'More Personal' },
+  { id: 'professional', label: 'More Professional' },
+  { id: 'shorter', label: 'Shorter' },
+  { id: 'detail', label: 'More Detail' },
+  { id: 'warmer', label: 'Warmer Tone' },
+  { id: 'urgency', label: 'Add Urgency' },
+] as const;
+
+function applyTweak(body: string, chipId: string): string {
+  switch (chipId) {
+    case 'personal':
+      return body
+        .replace(/^Hi (\w+),/, 'Hi $1 — hope you\'re doing well!')
+        .replace(/Best regards,\nSarah/, 'Looking forward to connecting,\nSarah')
+        .replace(/Best,\nSarah/, 'Looking forward to connecting,\nSarah');
+    case 'professional':
+      return body
+        .replace(/^Hi (\w+) — hope you're doing well!/, 'Dear $1,')
+        .replace(/^Hi (\w+),/, 'Dear $1,')
+        .replace(/Looking forward to connecting,\nSarah/, 'Best regards,\nSarah Mitchell, CFP\nVantage Wealth Management');
+    case 'shorter': {
+      const lines = body.split('\n').filter(l => l.trim());
+      if (lines.length > 4) {
+        return [lines[0], '', lines[1], '', lines[lines.length - 2], lines[lines.length - 1]].join('\n');
+      }
+      return body;
+    }
+    case 'detail':
+      return body.replace(
+        /Would you like.*\?|Would you have.*\?|Free for a quick.*\?|Would it be helpful.*\?|Would next week work.*\?|Let me know if.*\.|Happy to.*\./,
+        'I\'ve prepared a brief analysis specific to your situation that covers the key considerations. Would you have 20-30 minutes this week to review it together?'
+      );
+    case 'warmer':
+      return body
+        .replace(/^Dear (\w+),/, 'Hi $1,')
+        .replace(/Best regards,\nSarah.*/, 'Warmly,\nSarah')
+        .replace(/Best,\nSarah/, 'Warmly,\nSarah');
+    case 'urgency':
+      return body.replace(
+        /Would you like.*\?|Would you have.*\?|Free for a quick.*\?|Would it be helpful.*\?|Would next week work.*\?|Let me know if.*\.|Happy to.*\./,
+        'Given the timing, acting before the end of this quarter could make a meaningful difference. I have a few openings this week — would any of them work for a quick call?'
+      );
+    default:
+      return body;
+  }
+}
+
 export default function FollowUpPage() {
   const { showToast } = useToast();
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(emails[0] ?? null);
@@ -23,6 +72,9 @@ export default function FollowUpPage() {
   const [composeText, setComposeText] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
+  const [appliedTweaks, setAppliedTweaks] = useState<Set<string>>(new Set());
+  const [isTweaking, setIsTweaking] = useState<string | null>(null);
+  const [tweakedBody, setTweakedBody] = useState<string>('');
 
   const isApproved = selectedEmail ? approvedIds.has(selectedEmail.id) : false;
   const draft = selectedEmail?.draftReply;
@@ -52,6 +104,9 @@ export default function FollowUpPage() {
     setShowForwardCompose(false);
     setComposeText('');
     setReadIds((prev) => new Set(prev).add(email.id));
+    setAppliedTweaks(new Set());
+    setIsTweaking(null);
+    setTweakedBody('');
   };
 
   const handleCloseModal = () => {
@@ -87,7 +142,7 @@ export default function FollowUpPage() {
 
   const handleEditDraft = () => {
     if (draft) {
-      setEditedText(isEdited ? editedText : draft.body);
+      setEditedText(isEdited ? editedText : (tweakedBody || draft.body));
       setIsEditing(true);
     }
   };
@@ -108,8 +163,21 @@ export default function FollowUpPage() {
     }
     setIsEdited(false);
     setEditedText('');
+    setAppliedTweaks(new Set());
+    setTweakedBody('');
     setShowDraftModal(false);
     setTimeout(handleGenerateReply, 100);
+  };
+
+  const handleTweakChip = (chipId: string) => {
+    if (isTweaking || !draft) return;
+    setIsTweaking(chipId);
+    setTimeout(() => {
+      const currentBody = tweakedBody || draft.body;
+      setTweakedBody(applyTweak(currentBody, chipId));
+      setAppliedTweaks(prev => new Set(prev).add(chipId));
+      setIsTweaking(null);
+    }, 800);
   };
 
   const handleEscape = useCallback((e: KeyboardEvent) => {
@@ -345,7 +413,7 @@ export default function FollowUpPage() {
                     </div>
                   </div>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed text-ink-muted pl-11">
-                    {isEdited ? editedText : draft.body}
+                    {isEdited ? editedText : (tweakedBody || draft.body)}
                   </div>
                 </div>
               )}
@@ -447,10 +515,39 @@ export default function FollowUpPage() {
                 />
               ) : (
                 <div className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
-                  {isEdited ? editedText : draft.body}
+                  {isEdited ? editedText : (tweakedBody || draft.body)}
                 </div>
               )}
             </div>
+
+            {/* Quick-Tweak Chips */}
+            {!isEditing && (
+              <div className="shrink-0 border-t border-border-faint px-6 py-3">
+                <div className="flex flex-wrap gap-1.5">
+                  {TWEAK_CHIPS.map(chip => (
+                    <button
+                      key={chip.id}
+                      onClick={() => handleTweakChip(chip.id)}
+                      disabled={isTweaking !== null}
+                      className={`rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors ${
+                        appliedTweaks.has(chip.id)
+                          ? 'border-accent-green bg-accent-green-light text-accent-green'
+                          : isTweaking === chip.id
+                          ? 'border-border bg-surface-inset text-ink-faint animate-pulse'
+                          : 'border-border text-ink-muted hover:text-ink hover:bg-surface-inset'
+                      }`}
+                    >
+                      {appliedTweaks.has(chip.id) && (
+                        <svg className="inline h-3 w-3 mr-0.5 -mt-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                        </svg>
+                      )}
+                      {isTweaking === chip.id ? 'Adjusting...' : chip.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Actions */}
             <div className="shrink-0 flex items-center justify-between border-t border-border px-6 py-4">

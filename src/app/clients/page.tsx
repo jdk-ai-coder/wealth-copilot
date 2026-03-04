@@ -9,8 +9,50 @@ import { clientHoldings } from '../../data/holdings';
 import { clientDocuments } from '../../data/documents';
 import { useToast } from '../../hooks/useToast';
 
-// Derive last contacted date from most recent completed meeting per client
-const lastContactedMap: Record<string, string> = {};
+// Derive last contacted date from most recent completed meeting per client,
+// with realistic fallback dates for clients without completed meetings
+const lastContactedMap: Record<string, string> = {
+  'client-001': '2026-02-18',
+  'client-003': '2026-01-22',
+  'client-004': '2026-02-27',
+  'client-005': '2026-02-10',
+  'client-006': '2026-01-14',
+  'client-007': '2026-02-20',
+  'client-008': '2026-03-01',
+  'client-011': '2026-02-05',
+  'client-012': '2026-01-30',
+  'client-013': '2025-12-18',
+  'client-014': '2026-02-24',
+  'client-015': '2026-01-08',
+  'client-016': '2026-02-13',
+  'client-017': '2025-11-20',
+  'client-018': '2026-02-06',
+  'client-019': '2026-01-28',
+  'client-020': '2026-02-19',
+  'client-021': '2025-12-10',
+  'client-022': '2026-01-16',
+  'client-023': '2026-02-26',
+  'client-024': '2026-01-03',
+  'client-025': '2026-02-11',
+  'client-026': '2025-12-04',
+  'client-027': '2026-01-21',
+  'client-028': '2026-02-14',
+  'client-029': '2025-11-12',
+  'client-030': '2026-02-03',
+  'client-031': '2026-01-09',
+  'client-032': '2026-02-22',
+  'client-033': '2025-12-19',
+  'client-034': '2026-01-31',
+  'client-035': '2026-02-17',
+  'client-036': '2026-01-06',
+  'client-037': '2025-12-11',
+  'client-038': '2026-02-08',
+  'client-039': '2026-01-24',
+  'client-040': '2026-02-28',
+  'client-041': '2026-01-15',
+  'client-042': '2026-02-21',
+};
+// Override with actual completed meeting dates
 for (const m of meetings) {
   if (m.status === 'completed') {
     const existing = lastContactedMap[m.clientId];
@@ -109,21 +151,20 @@ function ClientsContent() {
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-surface">
             <tr className="border-b border-border text-left text-xs font-medium uppercase tracking-wider text-ink-faint">
-              <th className="py-2 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('name')}>
+              <th className="py-3 pr-6 cursor-pointer hover:text-ink" onClick={() => handleSort('name')}>
                 Name{sortIndicator('name')}
               </th>
-              <th className="py-2 pr-4">Occupation</th>
-              <th className="py-2 pr-4">Risk</th>
-              <th className="py-2 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('totalAssets')}>
+              <th className="py-3 pr-6">Occupation</th>
+              <th className="py-3 pr-6 cursor-pointer hover:text-ink" onClick={() => handleSort('totalAssets')}>
                 Assets{sortIndicator('totalAssets')}
               </th>
-              <th className="py-2 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('nextReview')}>
+              <th className="py-3 pr-6 cursor-pointer hover:text-ink" onClick={() => handleSort('nextReview')}>
                 Next Review{sortIndicator('nextReview')}
               </th>
-              <th className="py-2 pr-4 cursor-pointer hover:text-ink" onClick={() => handleSort('lastContacted')}>
+              <th className="py-3 pr-6 cursor-pointer hover:text-ink" onClick={() => handleSort('lastContacted')}>
                 Last Contacted{sortIndicator('lastContacted')}
               </th>
-              <th className="py-2">Flags</th>
+              <th className="py-3">Flags</th>
             </tr>
           </thead>
           <tbody>
@@ -133,19 +174,18 @@ function ClientsContent() {
                 onClick={() => setSelectedClient(client)}
                 className="border-b border-border-faint cursor-pointer transition-colors hover:bg-surface-inset"
               >
-                <td className="py-2 pr-4 font-medium text-ink whitespace-nowrap">{client.name}</td>
-                <td className="py-2 pr-4 text-ink-muted max-w-[200px] truncate">{client.occupation}</td>
-                <td className="py-2 pr-4 text-ink-muted whitespace-nowrap">{client.riskProfile}</td>
-                <td className="py-2 pr-4 text-ink whitespace-nowrap">{formatCurrency(client.totalAssets)}</td>
-                <td className="py-2 pr-4 text-ink-muted whitespace-nowrap">
+                <td className="py-3 pr-6 font-medium text-ink whitespace-nowrap">{client.name}</td>
+                <td className="py-3 pr-6 text-ink-muted max-w-[260px] truncate">{client.occupation}</td>
+                <td className="py-3 pr-6 text-ink whitespace-nowrap">{formatCurrency(client.totalAssets)}</td>
+                <td className="py-3 pr-6 text-ink-muted whitespace-nowrap">
                   {new Date(client.nextReview + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                 </td>
-                <td className="py-2 pr-4 text-ink-muted whitespace-nowrap">
+                <td className="py-3 pr-6 text-ink-muted whitespace-nowrap">
                   {lastContactedMap[client.id]
                     ? new Date(lastContactedMap[client.id] + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
                     : '\u2014'}
                 </td>
-                <td className="py-2">
+                <td className="py-3">
                   <div className="flex gap-1 overflow-hidden">
                     {client.flags?.map((flag) => (
                       <span
